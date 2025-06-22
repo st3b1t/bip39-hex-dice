@@ -3880,7 +3880,7 @@ body {
                 </label>
             </div>
             <div class="col-auto">
-                <input type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
+                <input autofocus type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
             </div>
             <div class="col-auto">
                 <button id="submitWord" type="button" class="btn btn-primary">Add</button>
@@ -3905,11 +3905,13 @@ body {
         <fieldset class="mb-4" style="display: none">
             <legend>Result Words:</legend>
             <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
-            <button id="resetBtn" class="btn btn-primary mt-2" onclick="reset()">Reset</button>
+            <button id="selectBtn" class="btn btn-primary mt-2">Select</button>
+            <button id="resetBtn" class="btn btn-secondary mt-2">Reset</button>
         </fieldset>
     </div>
 
     <script>
+        // minimal polyfill 
         Element.prototype.on = Element.prototype.addEventListener;
         Element.prototype.off = Element.prototype.removeEventListener;
         const $ = document.getElementById.bind(document);
@@ -3924,25 +3926,22 @@ body {
         const $mnemonicLength = $('mnemonicLength');
         const $wordCounter = $('wordCounter');
         const $diceInput = $('diceInput');
-        const $submitWordBtn = $('submitWord');
-        const $submitWordBtnAuto = $('submitWordAuto');
+        const $submitWord = $('submitWord');
+        const $submitWordDebug = $('submitWordAuto');
         const $entrySection = $('entrySection');
         const $resultsSection = $('resultsSection');
-        const $enteredWords = $('enteredWords');
+        const $langlist = $('langlist');        
+        const $enteredWords = $('enteredWords');        
         const $finalWords = $('finalWords');
-        const $langlist = $('langlist');
         const $resultWords = $('resultWordsText');
+        const $resetBtn = $('resetBtn');
+        const $selectBtn = $('selectBtn');
 
         let enteredWords = [];
         let mnemonicLength = parseInt($mnemonicLength.value);
 
         const defaultLang = $langlist.querySelector('input[name="wordlist"]:checked').value;
         let WORDLIST = WORDLISTS[defaultLang || 'english'];
-        
-        $alertDiv.querySelector('.btn-close').on('click', function() {
-            $alertDiv.classList.remove('show');
-            $alertDiv.style.display = 'none';
-        });
 
         $langlist.querySelectorAll('input[name="wordlist"]').forEach(input => {
             input.on('change', function() {
@@ -3954,6 +3953,11 @@ body {
                     console.error("Wordlist for language '" + lang + "' not found.");
                 }
             });
+        });
+
+        $alertDiv.querySelector('.btn-close').on('click', function() {
+            $alertDiv.classList.remove('show');
+            $alertDiv.style.display = 'none';
         });
 
         $mnemonicLength.on('change', function() {
@@ -3982,6 +3986,12 @@ body {
                 $alertDiv.classList.remove('show');
                 $alertDiv.style.display = 'none';
             }, 5000);
+        }
+
+        function getRandomFace() {
+            return (Math.floor(Math.random() * 8) + 1).toString() + 
+                    Math.floor(Math.random() * 16).toString(16).toUpperCase() + 
+                    Math.floor(Math.random() * 16).toString(16).toUpperCase();
         }
 
         function decode_entry(entry) {
@@ -4045,7 +4055,7 @@ body {
 
         function createWordItem(word, onClick = null) {
             const wordEl = create('span', 'word-item', word);
-            if (typeof onClick === 'function') {
+            if (onClick) {
                 wordEl.className += ' btn btn-primary';
                 wordEl.on('click', e => {
                     e.preventDefault();
@@ -4116,14 +4126,14 @@ body {
             }
         }
 
-        $submitWordBtn.on('click', handleWordSubmit);
+        $submitWord.on('click', handleWordSubmit);
         $diceInput.on('keyup', (e) => {
             if (e.key === "Enter") {
                 handleWordSubmit();
             }
         });
         
-        $submitWordBtnAuto.on('click', async (e) => {
+        $submitWordDebug.on('click', async (e) => {
             //automatize 12 words generation for debug only simulate click on button
             let maxInterval= 0;
             const intervalId = setInterval(async () => {
@@ -4131,10 +4141,7 @@ body {
                     clearInterval(intervalId);
                     return;
                 }
-                const randomFace = ( Math.floor(Math.random() * 8) + 1).toString() + 
-                                    Math.floor(Math.random() * 16).toString(16).toUpperCase() + 
-                                    Math.floor(Math.random() * 16).toString(16).toUpperCase();
-                $diceInput.value = randomFace;
+                $diceInput.value = getRandomFace();
                 handleWordSubmit(false);
             }, 500);
         });
@@ -4144,7 +4151,16 @@ body {
             showAlert("Complete mnemonic phrase copy to clipboard.");
         });
 
-        reset();
+        $selectBtn.on('click', () => {
+            $resultWords.select();
+            showAlert("Mnemonic phrase copied to clipboard.");
+            navigator.clipboard.writeText($resultWords.value).catch(err => {
+                console.error('Failed to copy: ', err);
+                showAlert("Failed to copy mnemonic phrase to clipboard.");
+            });
+        });
+
+        $resetBtn.on('click', reset);
 
     </script>
 </body>
