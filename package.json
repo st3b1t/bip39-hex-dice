@@ -1,0 +1,11 @@
+{
+  "name": "bip39-hex-dice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "st3b1t",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.3.7"
+  }
+}

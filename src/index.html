@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mnemonic Generator by Hex Dice</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="words/wordlist_chinese_simplified.js"></script>
+    <script src="words/wordlist_chinese_traditional.js"></script>
+    <script src="words/wordlist_czech.js"></script>
+    <script src="words/wordlist_english.js"></script>
+    <script src="words/wordlist_french.js"></script>
+    <script src="words/wordlist_italian.js"></script>
+    <script src="words/wordlist_japanese.js"></script>
+    <script src="words/wordlist_korean.js"></script>
+    <script src="words/wordlist_portuguese.js"></script>
+    <script src="words/wordlist_spanish.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <h1>[Hex Dice] Bip39 Mnemonic Generator</h1>
+    
+    <div class="my-4">
+        Generate a 12-24 words BIP39 mnemonic phrase using hex dice, inspired:
+        <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
+        |
+        <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
+        <br>
+        by <a href="https://x.com/st3b1t" target="_blank" rel="noopener">st3b1t</a>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <strong>Error:</strong> <span id="alertText"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-4">
+        <label for="mnemonicLength" class="form-label">Mnemonic length:</label>
+        <select id="mnemonicLength" class="form-select d-inline-block w-auto ms-2" aria-label="Mnemonic length">
+            <option value="6">6</option>
+            <option value="12" selected>12</option>
+            <option value="15">15</option>
+            <option value="18">18</option>
+            <option value="21">21</option>
+            <option value="24">24</option>
+        </select>
+        words
+    </div>
+
+    <div class="my-4">
+        Mnemonic Language:
+        <div id="wordlistRadios" class="d-inline-block ms-2">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langEnglish" value="english" checked>
+                <label class="form-check-label" for="langEnglish">English</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langJapanese" value="japanese">
+                <label class="form-check-label" for="langJapanese">日本語</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langSpanish" value="spanish">
+                <label class="form-check-label" for="langSpanish">Español</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langChineseSimplified" value="chinese_simplified">
+                <label class="form-check-label" for="langChineseSimplified">中文(简体)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langChineseTraditional" value="chinese_traditional">
+                <label class="form-check-label" for="langChineseTraditional">中文(繁體)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langFrench" value="french">
+                <label class="form-check-label" for="langFrench">Français</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langItalian" value="italian">
+                <label class="form-check-label" for="langItalian">Italiano</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langKorean" value="korean">
+                <label class="form-check-label" for="langKorean">한국어</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langCzech" value="czech">
+                <label class="form-check-label" for="langCzech">Čeština</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese" value="portuguese">
+                <label class="form-check-label" for="langPortuguese">Português</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langPolish" value="polish">
+                <label class="form-check-label" for="langPolish">Polski</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="wordlist" id="langRussian" value="russian">
+                <label class="form-check-label" for="langRussian">Русский</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="entrySection" class="my-4">
+        <form class="row g-2 align-items-center" onsubmit="return false;">
+            <div class="col-auto">
+                <label for="diceInput" class="col-form-label">
+                    Enter dice roll for word <b>#<span id="wordCounter">1</span></b> (e.g., '28E'):
+                </label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
+            </div>
+            <div class="col-auto">
+                <button id="submitWord" type="button" class="btn btn-primary">Add</button>
+                <a id="submitWordAuto" type="button" class="btn btn-link" style="color: red;">Simulate dice rolling (only for debug)</a>
+            </div>
+        </form>
+    </div>
+    
+    <div id="resultsSection" class="my-4">
+        <fieldset class="mb-4" style="display: none">
+            <legend>Entered Words:</legend>
+            <div id="enteredWords">
+            </div>
+        </fieldset>
+        <fieldset class="mb-4" style="display: none">
+            <legend>Possible Final Word:</legend>
+            <div id="finalWords">
+            </div>
+        </fieldset>
+        <fieldset class="mb-4" style="display: none">
+            <legend>Result Words:</legend>
+            <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
+            <button id="resetBtn" class="btn btn-primary mt-2" onclick="reset()">Reset</button>
+        </fieldset>
+    </div>
+
+    <script>
+        let enteredWords = [];
+        let mnemonicLength = parseInt(document.getElementById('mnemonicLength').value);
+
+        const alertDiv = document.getElementById('alert');
+        const alertToast = new bootstrap.Toast(alertDiv, {
+            autohide: true,
+            position: 'top-center',
+            animation: false,
+            delay: 5000
+        });
+        const mnemonicLengthSelect = document.getElementById('mnemonicLength');
+        const wordCounterSpan = document.getElementById('wordCounter');
+        const diceInput = document.getElementById('diceInput');
+        const submitWordBtn = document.getElementById('submitWord');
+        const submitWordBtnAuto = document.getElementById('submitWordAuto');
+        const entrySection = document.getElementById('entrySection');
+        const resultsSection = document.getElementById('resultsSection');
+        const enteredWordsDiv = document.getElementById('enteredWords');
+        const finalWordsDiv = document.getElementById('finalWords');
+        const wordlistRadios = document.getElementById('wordlistRadios');
+        const resultWordsText = document.getElementById('resultWordsText');
+
+        const defaultLang = wordlistRadios.querySelector('input[name="wordlist"]:checked').value;
+        let WORDLIST = WORDLISTS[defaultLang || 'english'];
+        
+        wordlistRadios.querySelectorAll('input[name="wordlist"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const lang = this.value;
+                if (WORDLISTS[lang]) {
+                    WORDLIST = WORDLISTS[lang];
+                    reset();
+                } else {
+                    console.error("Wordlist for language '" + lang + "' not found.");
+                }
+            });
+        });
+        mnemonicLengthSelect.addEventListener('change', function() {
+            mnemonicLength = parseInt(this.value);
+            reset();
+        });
+
+        function reset() {
+            enteredWords = [];
+            wordCounterSpan.textContent = "1";
+            entrySection.style.display = 'block';
+            resultWordsText.parentElement.style.display = 'none';
+            enteredWordsDiv.innerHTML = '';
+            finalWordsDiv.innerHTML = '';
+            diceInput.value = '';
+            diceInput.focus();
+        }
+            
+        function showAlert(message) {
+            alertDiv.textContent = message;
+            alertToast.show();
+        }
+
+        function decode_entry(entry) {
+            if (entry.length !== 3) {
+                throw new Error("Enter 3 characters for the dice roll, e.g., '28E'");
+            }
+            const group = parseInt(entry[0], 10) - 1;
+            if (isNaN(group) || group < 0 || group > 7) {
+                throw new Error("The first character must be a number from 1 to 8.");
+            }
+            const row = parseInt(entry[1], 16);
+            const col = parseInt(entry[2], 16);
+            if (isNaN(row) || isNaN(col)) {
+                 throw new Error("The second and third characters must be hex (0-9, A-F).");
+            }
+            const index = group * 256 + row * 16 + col;
+            if (index >= WORDLIST.length) {
+                throw new Error("Error, word index is out of bounds.");
+            }
+            return { word: WORDLIST[index], index };
+        }
+
+        async function checksum_valid(words) {
+            const indexes = words.map(w => WORDLIST.indexOf(w));
+            const bits = indexes.map(i => i.toString(2).padStart(11, '0')).join('');
+
+            const total_bit_length = bits.length;
+            if (![132, 165, 198, 231, 264].includes(total_bit_length)) {
+                return false;
+            }
+
+            const ENT = total_bit_length * 32 / 33;
+            const CS = total_bit_length - ENT;
+
+            const entropy_bits = bits.substring(0, ENT);
+            const checksum_bits = bits.substring(ENT);
+
+            const entropy_bytes = new Uint8Array(ENT / 8);
+            for (let i = 0; i < ENT / 8; i++) {
+                entropy_bytes[i] = parseInt(entropy_bits.substring(i * 8, (i + 1) * 8), 2);
+            }
+
+            const hashBuffer = await crypto.subtle.digest('SHA-256', entropy_bytes);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hash_bits = hashArray.map(b => b.toString(2).padStart(8, '0')).join('');
+            
+            const expected_checksum = hash_bits.substring(0, CS);
+
+            return checksum_bits === expected_checksum;
+        }
+
+        async function compute_final_words(partial_words) {
+            const valid_last = [];
+            for (const word of WORDLIST) {
+                if (await checksum_valid([...partial_words, word])) {
+                    valid_last.push(word);
+                }
+            }
+            return valid_last;
+        }
+
+        function buildWordItem(word, index, onClick = null) {
+            const wordEl = document.createElement('span');
+            wordEl.className = 'word-item';
+            if (typeof onClick === 'function') {
+                wordEl.className += ' btn btn-primary';
+                wordEl.addEventListener('click', e => {
+                    e.preventDefault();
+                    onClick(word, index);
+                });
+            }
+            wordEl.textContent = typeof index === 'number' ? `${index + 1}. ${word}` : word;
+            return wordEl;
+        }
+        
+        async function updateEnteredWordsUI() {
+            enteredWordsDiv.parentElement.style.display = 'block';
+            enteredWordsDiv.innerHTML = '';
+            enteredWords.forEach((word, index) => {
+                const wordEl = buildWordItem(word, index);
+                if (index > 0 && index % 6 === 0) {
+                    const br = document.createElement('br');
+                    enteredWordsDiv.appendChild(br);
+                }
+                enteredWordsDiv.appendChild(wordEl);
+            });
+        }
+
+        async function handleFinalWordSelection(onClick) {
+            finalWordsDiv.parentElement.style.display = 'block';
+            finalWordsDiv.textContent = `Calculating possible final words for a ${mnemonicLength}-word seed...`;
+
+            const valid_last = await compute_final_words(enteredWords);
+
+            finalWordsDiv.innerHTML = `You can choose one of these <b>${valid_last.length} words</b> as the final word:<br>`;
+            //TODO showAlert(`You can choose one of these <b>${valid_last.length} word</b> as the final word.`);
+            valid_last.forEach((word) => {
+                const wordEl = buildWordItem(word, null, async (word) => { //on click final word
+                    enteredWords.push(word);
+                    await updateEnteredWordsUI();
+                    finalWordsDiv.parentElement.style.display = 'none';
+                    resultWordsText.parentElement.style.display = 'block';
+                    resultWordsText.value = enteredWords.join(' ');
+                    resultWordsText.focus();
+                });
+                finalWordsDiv.appendChild(wordEl);
+            });
+        }
+
+        async function handleWordSubmit(empty = true) {
+            const entry = diceInput.value.trim().toUpperCase();
+            if (!entry) return;
+
+            try {
+                const { word, index } = decode_entry(entry);
+                enteredWords.push(word);
+
+                await updateEnteredWordsUI();
+
+                if(empty) {
+                    diceInput.value = '';
+                }
+                
+                if (enteredWords.length < mnemonicLength - 1) { //next word
+                    wordCounterSpan.textContent = enteredWords.length + 1;
+                    diceInput.focus();
+                } else {
+                    entrySection.style.display = 'none';
+                    await handleFinalWordSelection();
+                }
+
+            } catch (e) {
+                showAlert(e.message);
+                diceInput.select();
+            }
+        }
+
+        submitWordBtn.addEventListener('click', handleWordSubmit);
+        diceInput.addEventListener('keyup', (e) => {
+            if (e.key === "Enter") {
+                handleWordSubmit();
+            }
+        });
+        
+        submitWordBtnAuto.addEventListener('click', async (e) => {
+            //automatize 12 words generation for debug only simulate click on button
+            let maxInterval= 0;
+            const intervalId = setInterval(async () => {
+                if (maxInterval++ >= mnemonicLength-1) {
+                    clearInterval(intervalId);
+                    return;
+                }
+                const randomFace = ( Math.floor(Math.random() * 8) + 1).toString() + 
+                                    Math.floor(Math.random() * 16).toString(16).toUpperCase() + 
+                                    Math.floor(Math.random() * 16).toString(16).toUpperCase();
+                diceInput.value = randomFace;
+                handleWordSubmit(false);
+            }, 500);
+        });
+
+        resultWordsText.addEventListener('click', () => {
+            resultWordsText.select();
+            showAlert("Complete mnemonic phrase copy to clipboard.");
+        });
+
+        reset();
+
+    </script>
+</body>
+</html> 
