@@ -222,10 +222,16 @@
             }, 5000);
         }
 
-        function getRandomFace() {
-            return (Math.floor(Math.random() * 8) + 1).toString() + 
-                    Math.floor(Math.random() * 16).toString(16).toUpperCase() + 
-                    Math.floor(Math.random() * 16).toString(16).toUpperCase();
+        async function getRandomFace() {
+            // insecure random dice roll for debug only
+            // return (Math.floor(Math.random() * 8) + 1).toString() + 
+            //         Math.floor(Math.random() * 16).toString(16).toUpperCase() + 
+            //         Math.floor(Math.random() * 16).toString(16).toUpperCase();
+            const randomBytes = new Uint8Array(3);
+            await crypto.getRandomValues(randomBytes);
+            return (randomBytes[0] % 8 + 1).toString() + 
+                    (randomBytes[1] % 16).toString(16).toUpperCase() + 
+                    (randomBytes[2] % 16).toString(16).toUpperCase();
         }
 
         function decode_entry(entry) {
@@ -375,7 +381,7 @@
                     clearInterval(intervalId);
                     return;
                 }
-                $diceInput.value = getRandomFace();
+                $diceInput.value = await getRandomFace();
                 handleWordSubmit(false);
             }, 500);
         });
