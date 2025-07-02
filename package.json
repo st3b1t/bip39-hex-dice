@@ -4,8 +4,14 @@
   "main": "index.js",
   "author": "st3b1t",
   "license": "MIT",
-  "description": "",
+  "description": "Hex Dice - Bip39 Mnemonic Generator",
+  "scripts": {
+    "test": "jasmine src/tests.js"
+  },  
   "dependencies": {
     "bootstrap": "^5.3.7"
+  },
+  "devDependencies": {
+    "jasmine": "^3.9.0"
   }
 }
