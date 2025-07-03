@@ -20,163 +20,170 @@
 <body>
     <h1>Hex Dice 🎲 Bip39 Mnemonic Generator</h1>
 
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="intro" class="my-4" >
-        Generate a 12-24 words BIP39 mnemonic phrase using hex dice, inspired:
-        <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
-        |
-        <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
-        <br />
-        code by <a href="https://x.com/st3b1t" target="_blank" rel="noopener"><a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">st3b1t</a>
-    </div>
-
-    <!-- <div id="requirements" class="card mb-3" style="max-width:33%; margin-left:auto">
-        <div class="card-body">
-            <h5 class="card-title">Requirements:</h5>
-            <p class="card-text">
-                1. Select the mnemonic length (12-24 words).<br />
-                2. Choose the language for the mnemonic words.<br />
-                3. Enter the dice rolls for each word in the format: <code>28E</code> (first character is the group, second and third are hex digits for row and column).<br />
-                4. Click "Add" to submit the word.<br />
-                5. After entering the required number of words, select the final word from the generated list.<br />
-                6. Copy the complete mnemonic phrase to your clipboard.
-            </p>
-        </div>
-    </div> -->
-
-    <div id="optionSection" class="my-4">
-        <div class="row align-items-center mb-2">
-            <div class="col-2">
-                <label for="mnemonicLength" class="form-label mb-0">Mnemonic length:</label>
-            </div>
-            <div class="col-auto">
-                <select id="mnemonicLength" class="form-select d-inline-block w-auto" aria-label="Mnemonic length">
-                    <option value="12" selected>12</option>
-                    <option value="15">15</option>
-                    <option value="18">18</option>
-                    <option value="21">21</option>
-                    <option value="24">24</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                words
-            </div>
-        </div>
-        
-        <div class="row align-items-center mb-2">
-            <div class="col-2">
-                <label for="mnemonicLanguage" class="form-label mb-0">Mnemonic Language:</label>
-            </div>
-            <div class="col-10">
-                <div id="langlist" class="d-flex flex-wrap gap-2">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langEnglish" value="english" checked>
-                        <label class="form-check-label" for="langEnglish">English</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langSpanish" value="spanish">
-                        <label class="form-check-label" for="langSpanish">Español</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langFrench" value="french">
-                        <label class="form-check-label" for="langFrench">Français</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langItalian" value="italian">
-                        <label class="form-check-label" for="langItalian">Italiano</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langCzech" value="czech">
-                        <label class="form-check-label" for="langCzech">Čeština</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese" value="portuguese">
-                        <label class="form-check-label" for="langPortuguese">Português</label>
-                    </div>
-                    <div class="w-100"></div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langPolish" value="polish">
-                        <label class="form-check-label" for="langPolish">Polski</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langRussian" value="russian">
-                        <label class="form-check-label" for="langRussian">Русский</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langJapanese" value="japanese">
-                        <label class="form-check-label" for="langJapanese">日本語</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langChineseSimplified" value="chinese_simplified">
-                        <label class="form-check-label" for="langChineseSimplified">中文(简体)</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langChineseTraditional" value="chinese_traditional">
-                        <label class="form-check-label" for="langChineseTraditional">中文(繁體)</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="wordlist" id="langKorean" value="korean">
-                        <label class="form-check-label" for="langKorean">한국어</label>
+    <div row class="row">
+        <div class="col-8">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
+
+            <div id="intro" class="my-4" >
+                Generate a 12-24 words BIP39 mnemonic phrase using hex dice, inspired:
+                <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
+                |
+                <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
+                <br />
+                code by <a href="https://x.com/st3b1t" target="_blank" rel="noopener"><a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">st3b1t</a>
+            </div>
+
+            <div id="optionSection" class="my-4">
+                <div class="row align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="mnemonicLength" class="form-label mb-0">Mnemonic length:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="mnemonicLength" class="form-select d-inline-block w-auto" aria-label="Mnemonic length">
+                            <option value="12" selected>12</option>
+                            <option value="15">15</option>
+                            <option value="18">18</option>
+                            <option value="21">21</option>
+                            <option value="24">24</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        words
+                    </div>
+                </div>
+                
+                <div class="row align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="mnemonicLanguage" class="form-label mb-0">Mnemonic Language:</label>
+                    </div>
+                    <div class="col-10">
+                        <div id="langlist" class="d-flex flex-wrap gap-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langEnglish" value="english" checked>
+                                <label class="form-check-label" for="langEnglish">English</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langSpanish" value="spanish">
+                                <label class="form-check-label" for="langSpanish">Español</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langFrench" value="french">
+                                <label class="form-check-label" for="langFrench">Français</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langItalian" value="italian">
+                                <label class="form-check-label" for="langItalian">Italiano</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langCzech" value="czech">
+                                <label class="form-check-label" for="langCzech">Čeština</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese" value="portuguese">
+                                <label class="form-check-label" for="langPortuguese">Português</label>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langPolish" value="polish">
+                                <label class="form-check-label" for="langPolish">Polski</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langRussian" value="russian">
+                                <label class="form-check-label" for="langRussian">Русский</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langJapanese" value="japanese">
+                                <label class="form-check-label" for="langJapanese">日本語</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langChineseSimplified" value="chinese_simplified">
+                                <label class="form-check-label" for="langChineseSimplified">中文(简体)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langChineseTraditional" value="chinese_traditional">
+                                <label class="form-check-label" for="langChineseTraditional">中文(繁體)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langKorean" value="korean">
+                                <label class="form-check-label" for="langKorean">한국어</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="entrySection" class="my-4">
+                <form class="row g-2 align-items-center" onsubmit="return false;">
+                    <div class="col-auto">
+                        <label for="diceInput" class="col-form-label">
+                            Enter dice roll for word <b>#<span id="wordCounter">1</span></b>:
+                        </label>
+                    </div>
+                    <div class="col-auto">
+                        <input autofocus type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
+                    </div>
+                    <div class="col-auto">
+                        <button id="submitWord" type="button" class="btn btn-primary">Add</button>
+                        <a id="submitWordAuto" type="button" class="btn btn-link">
+                            Simulate dice roll
+                        </a><i class="text-danger">(only for debug!)</i>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="resultsSection" class="my-4">
+                <fieldset class="mb-4" style="display: none">
+                    <legend>Entered Words:</legend>
+                    <div id="enteredWords">
+                    </div>
+                </fieldset>
+                <fieldset class="mb-4" style="display: none">
+                    <legend>Possible Final Word:</legend>
+                    <div id="finalWords">
+                    </div>
+                </fieldset>
+                <fieldset class="mb-4" style="display: none">
+                    <legend>Result Words:</legend>
+                    <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
+                    <button id="copyBtn" class="btn btn-primary mt-2">Copy</button>
+                </fieldset>
+                <button id="resetBtn" class="btn btn-secondary mt-2">Reset</button>
+            </div>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            <div id="requirements" class="card w-100" role="alert" aria-live="polite" aria-atomic="true">
+                <div class="card-body">
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#requirements').style.display='none';"></button>                    
+                    <h5 class="card-title">Requirements:</h5>
+                    <p class="card-text">
+                        <ol>
+                            <li>Select the mnemonic length (12-24 words).</li>
+                            <li>Choose the language for the mnemonic words.</li>
+                            <li>Enter the dice rolls for each word in the format: <code>28E</code> (first character is 1-8, second and third are hex digits 1-F).</li>
+                            <li>Click "Add" to submit the word.</li>
+                            <li>After entering the required number of words, select the final word from the generated list.</li>
+                        </ol>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="entrySection" class="my-4">
-        <form class="row g-2 align-items-center" onsubmit="return false;">
-            <div class="col-auto">
-                <label for="diceInput" class="col-form-label">
-                    Enter dice roll for word <b>#<span id="wordCounter">1</span></b>:
-                </label>
-            </div>
-            <div class="col-auto">
-                <input autofocus type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
-            </div>
-            <div class="col-auto">
-                <button id="submitWord" type="button" class="btn btn-primary">Add</button>
-                <a id="submitWordAuto" type="button" class="btn btn-link">
-                    Simulate dice roll
-                </a><i class="text-danger">(only for debug!)</i>
-            </div>
-        </form>
-    </div>
-    
-    <div id="resultsSection" class="my-4">
-        <fieldset class="mb-4" style="display: none">
-            <legend>Entered Words:</legend>
-            <div id="enteredWords">
-            </div>
-        </fieldset>
-        <fieldset class="mb-4" style="display: none">
-            <legend>Possible Final Word:</legend>
-            <div id="finalWords">
-            </div>
-        </fieldset>
-        <fieldset class="mb-4" style="display: none">
-            <legend>Result Words:</legend>
-            <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
-            <button id="copyBtn" class="btn btn-primary mt-2">Copy</button>
-        </fieldset>
-        <button id="resetBtn" class="btn btn-secondary mt-2">Reset</button>
-    </div>
     
     <script src="utils.js"></script>
     <script>
         Element.prototype.on = Element.prototype.addEventListener;
         Element.prototype.off = Element.prototype.removeEventListener;
         Element.prototype.trigger = function(eName) {
-            const event = new Event(eName, { bubbles: true, cancelable: true });
-            this.dispatchEvent(event);
+            this.dispatchEvent(new Event(eName, { bubbles: true, cancelable: true }));
         };
         const $ = document.getElementById.bind(document);
         const create = function(tag, className = '', textContent = '') {
@@ -255,7 +262,7 @@
             }, 5000);
         }
 
-        function createWordItem(word, onClick = null) {
+        function createWord(word, onClick = null) {
             const wordEl = create('span', 'word-item', word);
             if (onClick) {
                 wordEl.className += ' btn btn-primary';
@@ -267,11 +274,11 @@
             return wordEl;
         }
         
-        async function updateEnteredWordsUI() {
+        function updateEnteredWords() {
             $enteredWords.parentElement.style.display = 'block';
             $enteredWords.innerHTML = '';
             enteredWords.forEach((word, index) => {
-                const wordEl = createWordItem(`${index + 1}. ${word}`);
+                const wordEl = createWord(`${index + 1}. ${word}`);
                 if (index > 0 && index % 6 === 0) {
                     $enteredWords.appendChild(create('br'));
                 }
@@ -287,9 +294,9 @@
 
             $finalWords.innerHTML = `Choose one of these <b>${valid_last.length} words</b> as the final mnemonic word:<br />`;
             valid_last.forEach((word) => {
-                const wordEl = createWordItem(word, async (word) => { //on click final word
+                const wordEl = createWord(word, async (word) => { //on click final word
                     enteredWords.push(word);
-                    await updateEnteredWordsUI();
+                    updateEnteredWords();
                     $finalWords.parentElement.style.display = 'none';
                     $resultWords.parentElement.style.display = 'block';
                     $resultWords.value = enteredWords.join(' ');
@@ -299,7 +306,7 @@
             });
         }
 
-        async function handleWordSubmit(empty = true) {
+        async function handleSubmitWord(empty = true) {
             const entry = $diceInput.value.trim().toUpperCase();
             if (!entry) return;
 
@@ -307,7 +314,7 @@
                 const { word, index } = decodeEntry(entry);
                 enteredWords.push(word);
 
-                await updateEnteredWordsUI();
+                await updateEnteredWords();
 
                 if(empty) {
                     $diceInput.value = '';
@@ -327,10 +334,10 @@
             }
         }
 
-        $submitWord.on('click', handleWordSubmit);
+        $submitWord.on('click', handleSubmitWord);
         $diceInput.on('keyup', (e) => {
             if (e.key === "Enter") {
-                handleWordSubmit();
+                handleSubmitWord();
             }
         });
         
@@ -343,8 +350,8 @@
                     return;
                 }
                 $diceInput.value = await getRandomFace();
-                handleWordSubmit(false);
-            }, 100);
+                handleSubmitWord(false);
+            }, 300);
         });
 
         $resultWords.on('click', () => {
