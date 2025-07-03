@@ -3799,8 +3799,7 @@ WORDLISTS["spanish"] = [
         |
         <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
         <br />
-        <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Github</a>
-        code by <a href="https://x.com/st3b1t" target="_blank" rel="noopener">st3b1t</a>
+        code by <a href="https://x.com/st3b1t" target="_blank" rel="noopener"><a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">st3b1t</a>
     </div>
 
     <!-- <div id="requirements" class="card mb-3" style="max-width:33%; margin-left:auto">
@@ -3819,7 +3818,7 @@ WORDLISTS["spanish"] = [
 
     <div id="optionSection" class="my-4">
         <div class="row align-items-center mb-2">
-            <div class="col-auto">
+            <div class="col-2">
                 <label for="mnemonicLength" class="form-label mb-0">Mnemonic length:</label>
             </div>
             <div class="col-auto">
@@ -3837,10 +3836,10 @@ WORDLISTS["spanish"] = [
         </div>
         
         <div class="row align-items-center mb-2">
-            <div class="col-auto">
+            <div class="col-2">
                 <label for="mnemonicLanguage" class="form-label mb-0">Mnemonic Language:</label>
             </div>
-            <div class="col">
+            <div class="col-10">
                 <div id="langlist" class="d-flex flex-wrap gap-2">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="wordlist" id="langEnglish" value="english" checked>
@@ -3866,6 +3865,7 @@ WORDLISTS["spanish"] = [
                         <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese" value="portuguese">
                         <label class="form-check-label" for="langPortuguese">Português</label>
                     </div>
+                    <div class="w-100"></div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="wordlist" id="langPolish" value="polish">
                         <label class="form-check-label" for="langPolish">Polski</label>
@@ -3928,15 +3928,85 @@ WORDLISTS["spanish"] = [
         <fieldset class="mb-4" style="display: none">
             <legend>Result Words:</legend>
             <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
-            <button id="selectBtn" class="btn btn-primary mt-2">Select</button>
+            <button id="copyBtn" class="btn btn-primary mt-2">Copy</button>
         </fieldset>
         <button id="resetBtn" class="btn btn-secondary mt-2">Reset</button>
     </div>
-
+    
     <script>
-        // minimal polyfill 
+async function getRandomFace() {
+    const randomBytes = new Uint8Array(3);
+    await crypto.getRandomValues(randomBytes);
+    return  (randomBytes[0] % 8 + 1).toString() + 
+            (randomBytes[1] % 16).toString(16).toUpperCase() + 
+            (randomBytes[2] % 16).toString(16).toUpperCase();
+}
+
+function decodeEntry(entry) {
+    if (entry.length !== 3) {
+        throw new Error("Enter 3 characters for the dice roll, e.g., '28E'");
+    }
+    const group = parseInt(entry[0], 10) - 1;
+    if (isNaN(group) || group < 0 || group > 7) {
+        throw new Error("The first character must be a number from 1 to 8.");
+    }
+    const row = parseInt(entry[1], 16);
+    const col = parseInt(entry[2], 16);
+    if (isNaN(row) || isNaN(col)) {
+            throw new Error("The second and third characters must be hex (0-9, A-F).");
+    }
+    const index = group * 256 + row * 16 + col;
+    if (index >= WORDLIST.length) {
+        throw new Error("Error, word index is out of bounds.");
+    }
+    return { word: WORDLIST[index], index };
+}
+
+async function validChecksum(words) {
+    const indexes = words.map(w => WORDLIST.indexOf(w));
+    const bits = indexes.map(i => i.toString(2).padStart(11, '0')).join('');
+
+    const total_bit_length = bits.length;
+    if (![132, 165, 198, 231, 264].includes(total_bit_length)) {
+        return false;
+    }
+
+    const ENT = total_bit_length * 32 / 33;
+    const CS = total_bit_length - ENT;
+
+    const entropy_bits = bits.substring(0, ENT);
+    const checksum_bits = bits.substring(ENT);
+
+    const entropy_bytes = new Uint8Array(ENT / 8);
+    for (let i = 0; i < ENT / 8; i++) {
+        entropy_bytes[i] = parseInt(entropy_bits.substring(i * 8, (i + 1) * 8), 2);
+    }
+
+    const hashBuffer = await crypto.subtle.digest('SHA-256', entropy_bytes);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hash_bits = hashArray.map(b => b.toString(2).padStart(8, '0')).join('');
+    
+    const expected_checksum = hash_bits.substring(0, CS);
+
+    return checksum_bits === expected_checksum;
+}
+
+async function genFinalWords(partialWords) {
+    const words = [];
+    for (const word of WORDLIST) {
+        if (await validChecksum([...partialWords, word])) {
+            words.push(word);
+        }
+    }
+    return words;
+}</script>
+    <script>
         Element.prototype.on = Element.prototype.addEventListener;
         Element.prototype.off = Element.prototype.removeEventListener;
+        Element.prototype.trigger = function(eName) {
+            const event = new Event(eName, { bubbles: true, cancelable: true });
+            this.dispatchEvent(event);
+        };
         const $ = document.getElementById.bind(document);
         const create = function(tag, className = '', textContent = '') {
             const el = document.createElement(tag);
@@ -3944,6 +4014,7 @@ WORDLISTS["spanish"] = [
             if (textContent) el.textContent = textContent;
             return el;
         }
+        // minimal polyfill         
 
         const $alertDiv = $('alert');
         const $mnemonicLength = $('mnemonicLength');
@@ -3958,7 +4029,7 @@ WORDLISTS["spanish"] = [
         const $finalWords = $('finalWords');
         const $resultWords = $('resultWordsText');
         const $resetBtn = $('resetBtn');
-        const $selectBtn = $('selectBtn');
+        const $copyBtn = $('copyBtn');
 
         let enteredWords = [];
         let mnemonicLength = parseInt($mnemonicLength.value);
@@ -3993,6 +4064,8 @@ WORDLISTS["spanish"] = [
             $wordCounter.textContent = "1";
             $entrySection.style.display = 'block';
             $resultWords.parentElement.style.display = 'none';
+            $enteredWords.parentElement.style.display = 'none';
+            $finalWords.parentElement.style.display = 'none';
             $enteredWords.innerHTML = '';
             $finalWords.innerHTML = '';
             $diceInput.value = '';
@@ -4009,77 +4082,6 @@ WORDLISTS["spanish"] = [
                 $alertDiv.classList.remove('show');
                 $alertDiv.style.display = 'none';
             }, 5000);
-        }
-
-        async function getRandomFace() {
-            // insecure random dice roll for debug only
-            // return (Math.floor(Math.random() * 8) + 1).toString() + 
-            //         Math.floor(Math.random() * 16).toString(16).toUpperCase() + 
-            //         Math.floor(Math.random() * 16).toString(16).toUpperCase();
-            const randomBytes = new Uint8Array(3);
-            await crypto.getRandomValues(randomBytes);
-            return  (randomBytes[0] % 8 + 1).toString() + 
-                    (randomBytes[1] % 16).toString(16).toUpperCase() + 
-                    (randomBytes[2] % 16).toString(16).toUpperCase();
-        }
-
-        function decodeEntry(entry) {
-            if (entry.length !== 3) {
-                throw new Error("Enter 3 characters for the dice roll, e.g., '28E'");
-            }
-            const group = parseInt(entry[0], 10) - 1;
-            if (isNaN(group) || group < 0 || group > 7) {
-                throw new Error("The first character must be a number from 1 to 8.");
-            }
-            const row = parseInt(entry[1], 16);
-            const col = parseInt(entry[2], 16);
-            if (isNaN(row) || isNaN(col)) {
-                 throw new Error("The second and third characters must be hex (0-9, A-F).");
-            }
-            const index = group * 256 + row * 16 + col;
-            if (index >= WORDLIST.length) {
-                throw new Error("Error, word index is out of bounds.");
-            }
-            return { word: WORDLIST[index], index };
-        }
-
-        async function validChecksum(words) {
-            const indexes = words.map(w => WORDLIST.indexOf(w));
-            const bits = indexes.map(i => i.toString(2).padStart(11, '0')).join('');
-
-            const total_bit_length = bits.length;
-            if (![132, 165, 198, 231, 264].includes(total_bit_length)) {
-                return false;
-            }
-
-            const ENT = total_bit_length * 32 / 33;
-            const CS = total_bit_length - ENT;
-
-            const entropy_bits = bits.substring(0, ENT);
-            const checksum_bits = bits.substring(ENT);
-
-            const entropy_bytes = new Uint8Array(ENT / 8);
-            for (let i = 0; i < ENT / 8; i++) {
-                entropy_bytes[i] = parseInt(entropy_bits.substring(i * 8, (i + 1) * 8), 2);
-            }
-
-            const hashBuffer = await crypto.subtle.digest('SHA-256', entropy_bytes);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hash_bits = hashArray.map(b => b.toString(2).padStart(8, '0')).join('');
-            
-            const expected_checksum = hash_bits.substring(0, CS);
-
-            return checksum_bits === expected_checksum;
-        }
-
-        async function genFinalWords(partialWords) {
-            const words = [];
-            for (const word of WORDLIST) {
-                if (await validChecksum([...partialWords, word])) {
-                    words.push(word);
-                }
-            }
-            return words;
         }
 
         function createWordItem(word, onClick = null) {
@@ -4171,20 +4173,20 @@ WORDLISTS["spanish"] = [
                 }
                 $diceInput.value = await getRandomFace();
                 handleWordSubmit(false);
-            }, 500);
-        });
-
-        $selectBtn.on('click', () => {
-            $resultWords.select();
-            showAlert("Complete mnemonic phrase, copy to clipboard.");
-            navigator.clipboard.writeText($resultWords.value).catch(err => {
-                console.error('Failed to copy: ', err);
-                showAlert("Failed to copy mnemonic phrase to clipboard.");
-            });
+            }, 100);
         });
 
         $resultWords.on('click', () => {
-            $selectBtn.click();
+            $resultWords.select();
+        });
+
+        $copyBtn.on('click', () => {
+            $resultWords.trigger('click');
+            navigator.clipboard.writeText($resultWords.value).catch(err => {
+                console.error('Failed to copy: ', err);
+                showAlert("Failed to copy mnemonic phrase to clipboard.");
+            }); 
+            showAlert("Mnemonic phrase copied to clipboard.");
         });
 
         $resetBtn.on('click', reset);
