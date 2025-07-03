@@ -9,7 +9,7 @@ from io import open
 
 # It removes script and style tags and replaces with the file content.
 
-f = open('./src/index.html', "r", encoding="utf-8")
+f = open('src/index.html', "r", encoding="utf-8")
 page = f.read()
 f.close()
 
@@ -30,21 +30,22 @@ for script in scripts:
 
 # Style tags
 
-stylesFinder = re.compile(r"""<link rel="stylesheet" href="(.*)">""")
+stylesFinder = re.compile("""<link href="(.*)" rel="stylesheet" type="text/css">""")
 styles = stylesFinder.findall(page)
 
 for style in styles:
     filename = os.path.join('src', style)
+    print("Processing style: %s" % filename)
     s = open(filename, "r", encoding="utf-8")
-    styleContent = "<style>\n%s\n</style>" % s.read()
+    styleContent = "<style>%s</style>" % s.read()
     s.close()
-    styleTag = """<link rel="stylesheet" href="%s">""" % style
+    styleTag = """<link href="%s" rel="stylesheet" type="text/css">""" % style
     page = page.replace(styleTag, styleContent)
 
 
 # Write the standalone file
 
-f = open('./index.html', 'w', encoding="utf-8")
+f = open('index.html', 'w', encoding="utf-8")
 f.write(page)
 f.close()
 
