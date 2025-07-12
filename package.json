@@ -8,6 +8,8 @@
   "scripts": {
     "test": "jasmine src/tests/*"
   },  
+  //al precommit hook esegui compile.py
+  "precommit": "python3 compile.py",
   "dependencies": {
     "bootstrap": "^5.3.7"
   },
