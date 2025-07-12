@@ -5,17 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hex Dice 🎲 Bip39 Mnemonic Generator</title>
 <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="dices.css" rel="stylesheet" type="text/css">
 <link href="main.css" rel="stylesheet" type="text/css">
-<script src="words/wordlist_chinese_simplified.js"></script>
-<script src="words/wordlist_chinese_traditional.js"></script>
-<script src="words/wordlist_czech.js"></script>
-<script src="words/wordlist_english.js"></script>
-<script src="words/wordlist_french.js"></script>
-<script src="words/wordlist_italian.js"></script>
-<script src="words/wordlist_japanese.js"></script>
-<script src="words/wordlist_korean.js"></script>
-<script src="words/wordlist_portuguese.js"></script>
-<script src="words/wordlist_spanish.js"></script>
+<script src="wordlists/chinese_simplified.js"></script>
+<script src="wordlists/chinese_traditional.js"></script>
+<script src="wordlists/czech.js"></script>
+<script src="wordlists/english.js"></script>
+<script src="wordlists/french.js"></script>
+<script src="wordlists/italian.js"></script>
+<script src="wordlists/japanese.js"></script>
+<script src="wordlists/korean.js"></script>
+<script src="wordlists/portuguese.js"></script>
+<script src="wordlists/spanish.js"></script>
+<script src="utils.js"></script>
 </head>
 <body>
     <h1>Hex Dice 🎲 Bip39 Mnemonic Generator</h1>
@@ -158,27 +160,26 @@
                 <button id="resetBtn" class="btn btn-secondary mt-2">Reset</button>
             </div>
         </div>
-        <div class="col-4 d-flex justify-content-end">
-            <div id="requirements" class="card w-100" role="alert" aria-live="polite" aria-atomic="true">
+        <div class="col-4 d-flex">
+            <div id="requirements" class="card w-100" role="alert">
                 <div class="card-body">
                     <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#requirements').style.display='none';"></button>                    
                     <h5 class="card-title">Requirements:</h5>
                     <p class="card-text">
                         <ol>
+                            <li>Get one 8-sided dice and two 16-sided dice, as shown in image below</li>
                             <li>Select the mnemonic length (12-24 words).</li>
                             <li>Choose the language for the mnemonic words.</li>
-                            <li>Enter the dice rolls for each word in the format: <code>28E</code> (first character is 1-8, second and third are hex digits 1-F).</li>
+                            <li>Enter the dice rolls for each word</li>
                             <li>Click "Add" to submit the word.</li>
                             <li>After entering the required number of words, select the final word from the generated list.</li>
                         </ol>
+                        <span id="dices"></span>
                     </p>
                 </div>
             </div>
         </div>
     </div>
-
-    
-    <script src="utils.js"></script>
     <script>
         Element.prototype.on = Element.prototype.addEventListener;
         Element.prototype.off = Element.prototype.removeEventListener;

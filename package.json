@@ -6,7 +6,7 @@
   "license": "MIT",
   "description": "Hex Dice - Bip39 Mnemonic Generator",
   "scripts": {
-    "test": "jasmine src/tests.js"
+    "test": "jasmine src/tests/*"
   },  
   "dependencies": {
     "bootstrap": "^5.3.7"
