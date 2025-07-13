@@ -31,7 +31,7 @@ function decodeEntry(inputValue) {
     if (!/^[1-8]$/.test(entry[0])) {
         throw new Error("The first character must be a number from 1 to 8.");
     }
-    const first = parseInt(entry[0], 10) - 1;
+    const first = parseInt(entry[0], 10);
     
     if (!/^[0-9A-F]$/.test(entry[1])) {
         throw new Error("The second character must be hex (0-9, A-F).");
@@ -42,12 +42,16 @@ function decodeEntry(inputValue) {
         throw new Error("The third character must be hex (0-9, A-F).");
     }
     const third = parseInt(entry[2], 16);
-    
-    const listIndex = first * 256 + second * 16 + third;
-    if (listIndex >= WORDLIST.length) {
+
+    const wordIndex = (first - 1) * 256
+                + second * 16
+                + third;
+
+    if (wordIndex >= WORDLIST.length) {
         throw new Error(`Error value ${inputValue}, word index is out of bounds.`);
     }
-    return { word: WORDLIST[listIndex], index: listIndex };
+
+    return WORDLIST[wordIndex];
 }
 
 async function validChecksum(words) {

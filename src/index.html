@@ -272,7 +272,7 @@
         const $resetBtn = $('resetBtn');
         const $copyBtn = $('copyBtn');
 
-        let enteredWords = [];
+        const enteredWordsArray = [];
         let mnemonicLength = parseInt($mnemonicLength.value);
 
         const defaultLang = $langlist.querySelector('input[name="wordlist"]:checked').value;
@@ -303,7 +303,7 @@
         });
 
         function reset() {
-            enteredWords = [];
+            enteredWordsArray.length = 0;
             $wordCounter.textContent = "1";
             $entrySection.style.display = 'block';
             $resultWords.parentElement.style.display = 'none';
@@ -343,7 +343,7 @@
         function updateEnteredWords() {
             $enteredWords.parentElement.style.display = 'block';
             $enteredWords.innerHTML = '';
-            enteredWords.forEach((word, index) => {
+            enteredWordsArray.forEach((word, index) => {
                 const wordEl = createWord(`${index + 1}. ${word}`);
                 if (index > 0 && index % 6 === 0) {
                     $enteredWords.appendChild(create('br'));
@@ -366,16 +366,16 @@
             $finalWords.parentElement.style.display = 'block';
             $finalWords.textContent = `Calculating possible final words for a ${mnemonicLength}-word seed...`;
 
-            const validLast = await genFinalWords(enteredWords);
+            const validLast = await genFinalWords(enteredWordsArray);
 
             $finalWords.innerHTML = `Choose one of these <b>${validLast.length} words</b> as the final mnemonic word:<br />`;
-            validLast.forEach((word) => {
+            validLast.forEach(word => {
                 const wordEl = createWord(word, async (word) => { //on click final word
-                    enteredWords.push(word);
+                    enteredWordsArray.push(word);
                     updateEnteredWords();
                     $finalWords.parentElement.style.display = 'none';
                     $resultWords.parentElement.style.display = 'block';
-                    $resultWords.value = enteredWords.join(' ');
+                    $resultWords.value = enteredWordsArray.join(' ');
                     $resultWords.focus();
                 });
                 $finalWords.appendChild(wordEl);
@@ -385,8 +385,9 @@
         async function handleSubmitWord(empty = true) {
 
             try {
-                const { word, index } = decodeEntry($diceInput.value);
-                enteredWords.push(word);
+                const word = decodeEntry($diceInput.value);
+                
+                enteredWordsArray.push(word);
 
                 await updateEnteredWords();
 
@@ -395,8 +396,8 @@
                     updateDiceSelects();
                 }
                 
-                if (enteredWords.length < mnemonicLength - 1) { //next word
-                    $wordCounter.textContent = enteredWords.length + 1;
+                if (enteredWordsArray.length < mnemonicLength - 1) { //next word
+                    $wordCounter.textContent = enteredWordsArray.length + 1;
                     //$diceInput.focus();
                 } else {
                     $entrySection.style.display = 'none';
@@ -411,6 +412,7 @@
 
         $submitWord.on('click', handleSubmitWord);
         $diceInput.on('keyup', (e) => {
+            //TODO force uppercase
             if (e.key === "Enter") {
                 handleSubmitWord();
             } else {
