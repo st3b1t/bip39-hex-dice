@@ -279,6 +279,8 @@
         const defaultLang = $langlist.querySelector('input[name="wordlist"]:checked').value;
         let WORDLIST = WORDLISTS[defaultLang || 'english'];
 
+        //TODO use utils/fetchBip39Raw
+
         $langlist.querySelectorAll('input[name="wordlist"]').forEach(input => {
             input.on('change', function() {
                 const lang = this.value;

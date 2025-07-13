@@ -1,4 +1,18 @@
 
+function hasStrongCrypto() {
+    if ('crypto' in window && window['crypto'] !== null) {
+        return true;
+    } else {
+        throw new Error('Mnemonic should be generated with strong randomness, but crypto.getRandomValues is unavailable');
+    }
+}
+
+async function fetchBip39Raw (lang) {
+  return await fetch(`https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/${lang}.txt`)
+    .then(resp => resp.text())
+    .then(text => text.split('\n').filter(line => line.trim() !== ''));
+}
+
 async function getRandomFace() {
     const randomBytes = new Uint8Array(3);
     await crypto.getRandomValues(randomBytes);
