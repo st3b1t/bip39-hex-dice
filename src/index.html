@@ -248,6 +248,7 @@
             return el;
         }
         const $ = document.getElementById.bind(document);
+        //TODO
         // Element.prototype.find = function(selector) {
         //     return {
         //         each: callback => this.querySelectorAll(selector).forEach(callback)
@@ -312,7 +313,7 @@
             $enteredWords.innerHTML = '';
             $finalWords.innerHTML = '';
             $diceInput.value = '';
-            $diceSelect.querySelectorAll('select').forEach(select => select.value = '');
+            updateDiceSelects();
             $diceInput.focus();
         }
             
@@ -357,10 +358,6 @@
                 select.value = $diceInput.value[index] || '';
             });
         }
-
-        // function updateDiceInput() {
-        //     const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value);
-        //     $diceInput.value = diceValues.join('');
 
         async function handleFinalWordSelection(onClick) {
             $finalWords.parentElement.style.display = 'block';
@@ -423,8 +420,8 @@
         $diceSelect.querySelectorAll('select')
             .forEach(select => {
                 select.on('change', e => {
-                    const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value);
-                    $diceInput.value = diceValues.join('');
+                    const selectsValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value);
+                    $diceInput.value = selectsValues.join('');
                 });
             });
 
