@@ -65,6 +65,12 @@
     resize: none;
     background-color: #eee;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+#submitWordWrapper .text-danger {
+  visibility: hidden;
+}
+#submitWordWrapper:hover .text-danger {
+  visibility: visible
 }</style>
 <script>WORDLISTS = typeof WORDLISTS == "undefined" ? {} : WORDLISTS;
 WORDLISTS["chinese_simplified"] = [
@@ -3969,6 +3975,57 @@ async function genFinalWords(partialWords) {
                         <input autofocus type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
                     </div>
                     <div class="col-auto">
+                        <div id="diceSelect" class="input-group">
+                            <select name="diceSelect1" class="form-select" aria-label="8-sided dice">
+                                <option value="-"></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                            <select name="diceSelect2" class="form-select" aria-label="16-sided dice A">
+                                <option value="-"></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                            </select>
+                            <select name="diceSelect3" class="form-select" aria-label="16-sided dice B">
+                                <option value="-"></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-auto" id="submitWordWrapper">
                         <button id="submitWord" type="button" class="btn btn-primary">Add</button>
                         <a id="submitWordAuto" type="button" class="btn btn-link">
                             Simulate dice roll
@@ -3979,7 +4036,7 @@ async function genFinalWords(partialWords) {
             
             <div id="resultsSection" class="my-4">
                 <fieldset class="mb-4" style="display: none">
-                    <legend>Entered Words:</legend>
+                    <legend>Mnemonic Words:</legend>
                     <div id="enteredWords">
                     </div>
                 </fieldset>
@@ -3989,7 +4046,7 @@ async function genFinalWords(partialWords) {
                     </div>
                 </fieldset>
                 <fieldset class="mb-4" style="display: none">
-                    <legend>Result Words:</legend>
+                    <legend>Result Mnemonic:</legend>
                     <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
                     <button id="copyBtn" class="btn btn-primary mt-2">Copy</button>
                 </fieldset>
@@ -4035,6 +4092,7 @@ async function genFinalWords(partialWords) {
         const $mnemonicLength = $('mnemonicLength');
         const $wordCounter = $('wordCounter');
         const $diceInput = $('diceInput');
+        const $diceSelect = $('diceSelect');
         const $submitWord = $('submitWord');
         const $submitWordAuto = $('submitWordAuto');
         const $entrySection = $('entrySection');
@@ -4155,6 +4213,9 @@ async function genFinalWords(partialWords) {
 
                 if(empty) {
                     $diceInput.value = '';
+                    $diceSelect.querySelectorAll('select').forEach(select => {
+                        select.value = '';
+                    });
                 }
                 
                 if (enteredWords.length < mnemonicLength - 1) { //next word
@@ -4176,6 +4237,13 @@ async function genFinalWords(partialWords) {
             if (e.key === "Enter") {
                 handleSubmitWord();
             }
+        });
+
+        $diceSelect.querySelectorAll('select').forEach(select => {
+            select.on('change', e => {
+                const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value).join('');
+                $diceInput.value = diceValues;
+            });
         });
         
         $submitWordAuto.on('click', async (e) => {
