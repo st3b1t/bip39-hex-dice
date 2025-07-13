@@ -135,7 +135,7 @@
                     </div>
                     <div class="col-auto">
                         <div id="diceSelect" class="input-group">
-                            <select name="diceSelect1" class="form-select" aria-label="8-sided dice">
+                            <select data-index="0" class="form-select" aria-label="8-sided dice">
                                 <option value="-"></option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -146,8 +146,9 @@
                                 <option value="7">7</option>
                                 <option value="8">8</option>
                             </select>
-                            <select name="diceSelect2" class="form-select" aria-label="16-sided dice A">
+                            <select data-index="1" class="form-select" aria-label="16-sided dice A">
                                 <option value="-"></option>
+                                <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -164,8 +165,9 @@
                                 <option value="E">E</option>
                                 <option value="F">F</option>
                             </select>
-                            <select name="diceSelect3" class="form-select" aria-label="16-sided dice B">
+                            <select data-index="2" class="form-select" aria-label="16-sided dice B">
                                 <option value="-"></option>
+                                <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -187,8 +189,9 @@
                     <div class="col-auto" id="submitWordWrapper">
                         <button id="submitWord" type="button" class="btn btn-primary">Add</button>
                         <a id="submitWordAuto" type="button" class="btn btn-link">
-                            Simulate dice roll
-                        </a><i class="text-danger">(only for debug!)</i>
+                            Simulate Roll
+                        </a>
+                        <!-- <i class="text-danger">(only for debug!)</i> -->
                     </div>
                 </form>
             </div>
@@ -301,6 +304,9 @@
             $enteredWords.innerHTML = '';
             $finalWords.innerHTML = '';
             $diceInput.value = '';
+            $diceSelect.querySelectorAll('select').forEach(select => {
+                select.value = '';
+            });
             $diceInput.focus();
         }
             
@@ -379,7 +385,7 @@
                 
                 if (enteredWords.length < mnemonicLength - 1) { //next word
                     $wordCounter.textContent = enteredWords.length + 1;
-                    $diceInput.focus();
+                    //$diceInput.focus();
                 } else {
                     $entrySection.style.display = 'none';
                     await handleFinalWordSelection();
@@ -404,18 +410,23 @@
                 $diceInput.value = diceValues;
             });
         });
-        
+
         $submitWordAuto.on('click', async (e) => {
             //automatize 12 words generation for debug only simulate click on button
-            let maxInterval= 0;
-            const intervalId = setInterval(async () => {
-                if (maxInterval++ >= mnemonicLength-1) {
-                    clearInterval(intervalId);
-                    return;
-                }
+            //let maxInterval= 0;
+            // const intervalId = setInterval(async () => {
+            //     if (maxInterval++ >= mnemonicLength-1) {
+            //         clearInterval(intervalId);
+            //         return;
+            //     }
                 $diceInput.value = await getRandomFace();
+                $diceSelect.querySelectorAll('select').forEach(select => {
+                    
+                        select.value = $diceInput.value.length > 0 ? $diceInput.value[select.dataset.index] : ''; 
+
+                    });
                 handleSubmitWord(false);
-            }, 300);
+            //}, 300);
         });
 
         $resultWords.on('click', () => {
