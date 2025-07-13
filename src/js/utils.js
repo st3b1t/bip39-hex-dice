@@ -13,8 +13,8 @@ async function fetchBip39Raw (lang) {
     .then(text => text.split('\n').filter(line => line.trim() !== ''));
 }
 
-async function getRandomFace() {
-    const randomBytes = new Uint8Array(3);
+async function genRandomFace() {
+    const randomBytes = new Uint8Array(3); //3 bytes of randomness
     hasStrongCrypto();
     await crypto.getRandomValues(randomBytes);
     return  (randomBytes[0] % 8 + 1).toString() + //range 1-8
@@ -84,11 +84,11 @@ async function validChecksum(words) {
 }
 
 async function genFinalWords(partialWords) {
-    const words = [];
+    const validWords = [];
     for (const word of WORDLIST) {
         if (await validChecksum([...partialWords, word])) {
-            words.push(word);
+            validWords.push(word);
         }
     }
-    return words;
+    return validWords;
 }

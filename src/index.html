@@ -36,27 +36,20 @@
     <h1>Hex Dice 🎲 Bip39 Mnemonic Generator</h1>
 
     <div row class="row">
-        <div class="col-12 col-md-8">
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
+        <div id="intro" class="my-4" >
+            Generate a 12-24 words <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank" rel="noopener">BIP39 mnemonic</a> using hex dice, inspired:
+            <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
+            |
+            <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
+            <br />
+            Author <a href="https://x.com/st3b1t" target="_blank" rel="noopener">st3b1t</a>
+            | <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">Github Sources</a>
+            | <a href="https://github.com/st3b1t#donate" target="_blank" rel="noopener">Donate</a>
+        </div>
+    </div>
 
-            <div id="intro" class="my-4" >
-                Generate a 12-24 words BIP39 mnemonic phrase using hex dice, inspired:
-                <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
-                |
-                <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
-                <br />
-                Author <a href="https://x.com/st3b1t" target="_blank" rel="noopener">st3b1t</a>
-                | <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">Github Sources</a>
-                | <a href="https://github.com/st3b1t#donate" target="_blank" rel="noopener">Donate</a>
-            </div>
+    <div row class="row">
+        <div class="col-12 col-md-8">
 
             <div id="optionSection" class="my-4">
                 <div class="row align-items-center mb-2">
@@ -249,6 +242,17 @@
             </div>
         </div>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    
     <script>
         Element.prototype.on = Element.prototype.addEventListener;
         Element.prototype.off = Element.prototype.removeEventListener;
@@ -443,7 +447,7 @@
             e.preventDefault
             //automatize all 1 word generation
             try {
-                $diceInput.value = await getRandomFace();
+                $diceInput.value = await genRandomFace();
                 
                 handleSubmitWord(false);                
             } catch (err) {
