@@ -3,8 +3,8 @@ async function getRandomFace() {
     const randomBytes = new Uint8Array(3);
     await crypto.getRandomValues(randomBytes);
     return  (randomBytes[0] % 8 + 1).toString() + 
-            (randomBytes[1] % 16).toString(16).toUpperCase() + 
-            (randomBytes[2] % 16).toString(16).toUpperCase();
+            (randomBytes[1] % 16).toString(16) + 
+            (randomBytes[2] % 16).toString(16);
 }
 
 function decodeEntry(entry) {

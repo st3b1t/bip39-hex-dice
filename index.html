@@ -3797,8 +3797,8 @@ async function getRandomFace() {
     const randomBytes = new Uint8Array(3);
     await crypto.getRandomValues(randomBytes);
     return  (randomBytes[0] % 8 + 1).toString() + 
-            (randomBytes[1] % 16).toString(16).toUpperCase() + 
-            (randomBytes[2] % 16).toString(16).toUpperCase();
+            (randomBytes[1] % 16).toString(16) + 
+            (randomBytes[2] % 16).toString(16);
 }
 
 function decodeEntry(entry) {
@@ -3999,12 +3999,12 @@ async function genFinalWords(partialWords) {
                                 <option value="7">7</option>
                                 <option value="8">8</option>
                                 <option value="9">9</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
+                                <option value="a">A</option>
+                                <option value="b">B</option>
+                                <option value="c">C</option>
+                                <option value="d">D</option>
+                                <option value="e">E</option>
+                                <option value="f">F</option>
                             </select>
                             <select data-index="2" class="form-select" aria-label="16-sided dice B">
                                 <option value="-"></option>
@@ -4018,12 +4018,12 @@ async function genFinalWords(partialWords) {
                                 <option value="7">7</option>
                                 <option value="8">8</option>
                                 <option value="9">9</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
+                                <option value="a">A</option>
+                                <option value="b">B</option>
+                                <option value="c">C</option>
+                                <option value="d">D</option>
+                                <option value="e">E</option>
+                                <option value="f">F</option>
                             </select>
                         </div>
                     </div>
@@ -4057,16 +4057,16 @@ async function genFinalWords(partialWords) {
             </div>
         </div>
         <div class="col-4 d-flex">
-            <div id="requirements" class="card w-100" role="alert">
+            <div id="howto" class="card w-100" role="alert">
                 <div class="card-body">
-                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#requirements').style.display='none';"></button>                    
-                    <h5 class="card-title">Requirements:</h5>
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#howto').style.display='none';"></button>                    
+                    <h5 class="card-title">How-To:</h5>
                     <p class="card-text">
                         <ol>
-                            <li>Get one 8-sided dice and two 16-sided dice, as shown in image below</li>
+                            <li>Get one 8-sided die and two 16-sided dice, as shown in the image below.</li>
                             <li>Select the mnemonic length (12-24 words).</li>
                             <li>Choose the language for the mnemonic words.</li>
-                            <li>Enter the dice rolls for each word</li>
+                            <li>Enter the dice rolls for each word.</li>
                             <li>Click "Add" to submit the word.</li>
                             <li>After entering the required number of words, select the final word from the generated list.</li>
                         </ol>
@@ -4249,6 +4249,11 @@ async function genFinalWords(partialWords) {
         $diceInput.on('keyup', (e) => {
             if (e.key === "Enter") {
                 handleSubmitWord();
+            }
+            else {
+                $diceSelect.querySelectorAll('select').forEach(select => {
+                    select.value = $diceInput.value.length > 0 ? $diceInput.value[select.dataset.index] : '';
+                    });
             }
         });
 
