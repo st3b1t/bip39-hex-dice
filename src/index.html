@@ -41,10 +41,17 @@
             <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
             |
             <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
+            | 
+            <a href="https://github.com/valerio-vaccaro/TRMG" target="_blank" rel="noopener">valerio-vaccaro/TRMG</a>
+            <!-- More information can be found on the project's GitHub page. -->
+            <br />
+                More information can be found on the 
+                <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">project's Readme</a>.
             <br />
             Author <a href="https://x.com/st3b1t" target="_blank" rel="noopener">st3b1t</a>
             | <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">Github Sources</a>
             | <a href="https://github.com/st3b1t#donate" target="_blank" rel="noopener">Donate</a>
+
         </div>
     </div>
 
@@ -53,7 +60,7 @@
 
             <div id="optionSection" class="my-4">
                 <div class="row align-items-center mb-2">
-                    <div class="col-2">
+                    <div class="col-3">
                         <label for="mnemonicLength" class="form-label mb-0">Mnemonic length:</label>
                     </div>
                     <div class="col-auto">
@@ -71,10 +78,10 @@
                 </div>
                 
                 <div class="row align-items-center mb-2">
-                    <div class="col-2">
+                    <div class="col-3">
                         <label for="mnemonicLanguage" class="form-label mb-0">Mnemonic Language:</label>
                     </div>
-                    <div class="col-10">
+                    <div class="col-9">
                         <div id="langlist" class="d-flex flex-wrap gap-2">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="wordlist" id="langEnglish" value="english" checked>
@@ -100,7 +107,6 @@
                                 <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese" value="portuguese">
                                 <label class="form-check-label" for="langPortuguese">Português</label>
                             </div>
-                            <div class="w-100"></div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="wordlist" id="langPolish" value="polish">
                                 <label class="form-check-label" for="langPolish">Polski</label>
@@ -132,7 +138,7 @@
 
             <div id="entrySection" class="my-4">
                 <form class="row g-2 align-items-center" onsubmit="return false;">
-                    <div class="col-auto">
+                    <div class="col-3">
                         <label for="diceInput" class="col-form-label">
                             Enter dice roll for word <b>#<span id="wordCounter">1</span></b>:
                         </label>
@@ -198,7 +204,7 @@
                         <a id="submitWordAuto" type="button" class="btn btn-link">
                             Simulate Roll
                         </a>
-                        <!-- <i class="text-danger">(only for debug!)</i> -->
+                        <i class="text-danger">(only for testing!)</i>
                     </div>
                 </form>
             </div>
@@ -223,21 +229,50 @@
             </div>
         </div>
         <div class="col-12 order-first order-md-2 col-md-4">
-            <div id="howto" class="card w-100" role="alert">
+            <div id="help" class="card w-100" role="alert">
                 <div class="card-body">
-                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#howto').style.display='none';"></button>                    
-                    <h5 class="card-title">How-To:</h5>
-                    <p class="card-text">
-                        <ol>
-                            <li>Get one 8-sided die and two 16-sided dice, as shown in the image below.</li>
-                            <li>Select the mnemonic length (12-24 words).</li>
-                            <li>Choose the language for the mnemonic words.</li>
-                            <li>Enter the dice rolls for each word.</li>
-                            <li>Click "Add" to submit the word.</li>
-                            <li>After entering the required number of words, select the final word from the generated list.</li>
-                        </ol>
-                        <span id="dices" style="display: block; width: 100%; height: 150px;"></span>
-                    </p>
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#help').style.display='none';"></button>                    
+                    <ul class="nav nav-tabs mb-3" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="howto-tab" data-bs-toggle="tab" data-bs-target="#howto-content" type="button" role="tab" aria-controls="howto-content" aria-selected="true">How-To</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="why-tab" data-bs-toggle="tab" data-bs-target="#why-content" type="button" role="tab" aria-controls="why-content" aria-selected="false">Why</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="howto-content" role="tabpanel" aria-labelledby="howto-tab">
+                            <p class="card-text">
+                                <ol>
+                                    <li>Get one 8-sided die and two 16-sided dice, as shown in the image below.</li>
+                                    <li>Select the mnemonic length (12-24 words).</li>
+                                    <li>Choose the language for the mnemonic words.</li>
+                                    <li>Enter the dice rolls for each word.</li>
+                                    <li>Click "Add" to submit the word.</li>
+                                    <li>After entering the required number of words, select the final word from the generated list.</li>
+                                </ol>
+                                <span id="dices" style="display: block; width: 100%; height: 150px;"></span>
+                            </p>
+                        </div>
+                        <div class="tab-pane fade" id="why-content" role="tabpanel" aria-labelledby="why-tab">
+                            <p class="card-text">
+                                Using dice to generate a cryptographic private key offers several advantages over software or hardware-based generators.
+                                <ul>
+                                    <li>
+                                        Software-based <a href="https://doi.org/10.6028/NIST.SP.800-90Ar1" target="_blank" rel="noopener">PRNGs</a> (Pseudo-Random Number Generators)
+                                        rely on algorithms and entropy sources within the operating system, which can be potentially compromised or insufficient.
+                                    </li>
+                                    <li>Hardware <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-digital-random-number-generator-drng-software-implementation-guide.html" target="_blank" rel="noopener">TRNGs</a> (True Random Number Generators), 
+                                        while based on real physical phenomena, are still electronic circuits. They require trust in the manufacturer and may be vulnerable to backdoors or malfunctions.
+                                    </li>
+                                </ul>
+                                With dice, entropy is physical, transparent, and manually verifiable. The generation process is entirely offline, making
+                                it immune to remote attacks and eliminating the need to trust third-party software or hardware.
+                                <br>
+                                8-sided and 16-sided dice are used instead of standard 6-sided dice to provide more entropy per roll, making mnemonic generation faster and secure.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -290,6 +325,7 @@
         const $resultWords = $('resultWords');
         const $resetBtn = $('resetBtn');
         const $copyBtn = $('copyBtn');
+        const $help = $('help');
 
         const enteredWordsArray = [];
         let mnemonicLength = parseInt($mnemonicLength.value);
@@ -480,6 +516,16 @@
         });
 
         $resetBtn.on('click', reset);
+
+        $help.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tabBtn => {
+            tabBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                $help.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                $help.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
+                this.classList.add('active');
+                $help.querySelector(this.getAttribute('data-bs-target')).classList.add('show', 'active');
+            });
+        });
 
     </script>
 </body>
