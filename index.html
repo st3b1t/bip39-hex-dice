@@ -4082,13 +4082,20 @@ async function genFinalWords(partialWords) {
         Element.prototype.trigger = function(eName) {
             this.dispatchEvent(new Event(eName, { bubbles: true, cancelable: true }));
         };
-        const $ = document.getElementById.bind(document);
         const create = function(tag, className = '', textContent = '') {
             const el = document.createElement(tag);
             if (className) el.className = className;
             if (textContent) el.textContent = textContent;
             return el;
         }
+        const $ = document.getElementById.bind(document);
+        // Element.prototype.find = function(selector) {
+        //     return {
+        //         each: (callback) => {
+        //             this.querySelectorAll(selector).forEach(callback);
+        //         }
+        //     };
+        // };
         // minimal polyfill         
 
         const $alertDiv = $('alert');
