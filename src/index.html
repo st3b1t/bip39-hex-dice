@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hex Dice 🎲 Bip39 Mnemonic Generator</title>
-<link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="css/dices.css" rel="stylesheet" type="text/css">
-<link href="css/main.css" rel="stylesheet" type="text/css">
-<script src="wordlists/chinese_simplified.js"></script>
-<script src="wordlists/chinese_traditional.js"></script>
-<script src="wordlists/czech.js"></script>
-<script src="wordlists/english.js"></script>
-<script src="wordlists/french.js"></script>
-<script src="wordlists/italian.js"></script>
-<script src="wordlists/japanese.js"></script>
-<script src="wordlists/korean.js"></script>
-<script src="wordlists/portuguese.js"></script>
-<script src="wordlists/spanish.js"></script>
-<script src="js/utils.js"></script>
-<style>
-    #dices {
-        display: block;
-        width: 300px;
-        height: 150px;
-        max-width: 100%;
-        aspect-ratio: 2 / 1;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        margin: 0 auto;
-    }
-</style>
+    <title>Hex Dice 🎲 Bip39 Mnemonic Generator</title>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:image" content="src/dices.png">
+    <meta property="og:url" content="https://st3b1t.github.io/bip39-hex-dice/">
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/dices.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script src="wordlists/chinese_simplified.js"></script>
+    <script src="wordlists/chinese_traditional.js"></script>
+    <script src="wordlists/czech.js"></script>
+    <script src="wordlists/english.js"></script>
+    <script src="wordlists/french.js"></script>
+    <script src="wordlists/italian.js"></script>
+    <script src="wordlists/japanese.js"></script>
+    <script src="wordlists/korean.js"></script>
+    <script src="wordlists/portuguese.js"></script>
+    <script src="wordlists/spanish.js"></script>
+    <script src="js/utils.js"></script>
+    <style>
+        #dices {
+            display: block;
+            width: 300px;
+            height: 150px;
+            max-width: 100%;
+            aspect-ratio: 2 / 1;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Hex Dice 🎲 Bip39 Mnemonic Generator</h1>
 
     <div row class="row">
-        <div id="intro" class="my-4" >
-            Generate a 12-24 words <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank" rel="noopener">BIP39 mnemonic</a> using hex dice, inspired:
+        <div id="intro" class="my-4">
+            Generate a 12-24 words <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki"
+                target="_blank" rel="noopener">BIP39 mnemonic</a> using hex dice, inspired:
             <a href="http://bitup.space/8ff/" target="_blank" rel="noopener">bitup.space/8ff</a>
             |
             <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">iancoleman.io/bip39</a>
-            | 
+            |
             <a href="https://github.com/valerio-vaccaro/TRMG" target="_blank" rel="noopener">valerio-vaccaro/TRMG</a>
             <!-- More information can be found on the project's GitHub page. -->
             <br />
-                More information can be found on the 
-                <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">project's Readme</a>.
+            More information can be found on the
+            <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">project's Readme</a>.
             <br />
             Author <a href="https://x.com/st3b1t" target="_blank" rel="noopener">st3b1t</a>
             | <a href="https://github.com/st3b1t/bip39-hex-dice" target="_blank" rel="noopener">Github Sources</a>
@@ -64,7 +69,8 @@
                         <label for="mnemonicLength" class="form-label mb-0">Mnemonic length:</label>
                     </div>
                     <div class="col-auto">
-                        <select id="mnemonicLength" class="form-select d-inline-block w-auto" aria-label="Mnemonic length">
+                        <select id="mnemonicLength" class="form-select d-inline-block w-auto"
+                            aria-label="Mnemonic length">
                             <option value="12" selected>12</option>
                             <option value="15">15</option>
                             <option value="18">18</option>
@@ -76,7 +82,7 @@
                         words
                     </div>
                 </div>
-                
+
                 <div class="row align-items-center mb-2">
                     <div class="col-3">
                         <label for="mnemonicLanguage" class="form-label mb-0">Mnemonic Language:</label>
@@ -84,51 +90,63 @@
                     <div class="col-9">
                         <div id="langlist" class="d-flex flex-wrap gap-2">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langEnglish" value="english" checked>
+                                <input class="form-check-input" type="radio" name="wordlist" id="langEnglish"
+                                    value="english" checked>
                                 <label class="form-check-label" for="langEnglish">English</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langSpanish" value="spanish">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langSpanish"
+                                    value="spanish">
                                 <label class="form-check-label" for="langSpanish">Español</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langFrench" value="french">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langFrench"
+                                    value="french">
                                 <label class="form-check-label" for="langFrench">Français</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langItalian" value="italian">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langItalian"
+                                    value="italian">
                                 <label class="form-check-label" for="langItalian">Italiano</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langCzech" value="czech">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langCzech"
+                                    value="czech">
                                 <label class="form-check-label" for="langCzech">Čeština</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese" value="portuguese">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langPortuguese"
+                                    value="portuguese">
                                 <label class="form-check-label" for="langPortuguese">Português</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langPolish" value="polish">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langPolish"
+                                    value="polish">
                                 <label class="form-check-label" for="langPolish">Polski</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langRussian" value="russian">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langRussian"
+                                    value="russian">
                                 <label class="form-check-label" for="langRussian">Русский</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langJapanese" value="japanese">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langJapanese"
+                                    value="japanese">
                                 <label class="form-check-label" for="langJapanese">日本語</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langChineseSimplified" value="chinese_simplified">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langChineseSimplified"
+                                    value="chinese_simplified">
                                 <label class="form-check-label" for="langChineseSimplified">中文(简体)</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langChineseTraditional" value="chinese_traditional">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langChineseTraditional"
+                                    value="chinese_traditional">
                                 <label class="form-check-label" for="langChineseTraditional">中文(繁體)</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="wordlist" id="langKorean" value="korean">
+                                <input class="form-check-input" type="radio" name="wordlist" id="langKorean"
+                                    value="korean">
                                 <label class="form-check-label" for="langKorean">한국어</label>
                             </div>
                         </div>
@@ -144,11 +162,13 @@
                         </label>
                     </div>
                     <div class="col-auto">
-                        <input autofocus type="text" id="diceInput" maxlength="3" size="5" class="form-control" autocomplete="off" />
+                        <input autofocus type="text" id="diceInput" maxlength="3" size="5" class="form-control"
+                            autocomplete="off" />
                     </div>
                     <div class="col-auto">
                         <div id="diceSelect" class="input-group">
-                            <select data-index="0" class="form-select" aria-label="8-sided dice" title="first dice 8 faces">
+                            <select data-index="0" class="form-select" aria-label="8-sided dice"
+                                title="first dice 8 faces">
                                 <option value="-"></option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -159,7 +179,8 @@
                                 <option value="7">7</option>
                                 <option value="8">8</option>
                             </select>
-                            <select data-index="1" class="form-select" aria-label="16-sided dice A" title="second dice 16 faces">
+                            <select data-index="1" class="form-select" aria-label="16-sided dice A"
+                                title="second dice 16 faces">
                                 <option value="-"></option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -178,7 +199,8 @@
                                 <option value="e">E</option>
                                 <option value="f">F</option>
                             </select>
-                            <select data-index="2" class="form-select" aria-label="16-sided dice B" title="third dice 16 faces">
+                            <select data-index="2" class="form-select" aria-label="16-sided dice B"
+                                title="third dice 16 faces">
                                 <option value="-"></option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -208,7 +230,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <div id="resultsSection" class="my-4">
                 <fieldset class="mb-4" style="display: none">
                     <legend>Mnemonic Words:</legend>
@@ -231,45 +253,60 @@
         <div class="col-12 order-first order-md-2 col-md-4">
             <div id="help" class="card w-100" role="alert">
                 <div class="card-body">
-                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('#help').style.display='none';"></button>                    
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"
+                        onclick="this.closest('#help').style.display='none';"></button>
                     <ul class="nav nav-tabs mb-3" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="howto-tab" data-bs-toggle="tab" data-bs-target="#howto-content" type="button" role="tab" aria-controls="howto-content" aria-selected="true">How-To</button>
+                            <button class="nav-link active" id="howto-tab" data-bs-toggle="tab"
+                                data-bs-target="#howto-content" type="button" role="tab" aria-controls="howto-content"
+                                aria-selected="true">How-To</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="why-tab" data-bs-toggle="tab" data-bs-target="#why-content" type="button" role="tab" aria-controls="why-content" aria-selected="false">Why</button>
+                            <button class="nav-link" id="why-tab" data-bs-toggle="tab" data-bs-target="#why-content"
+                                type="button" role="tab" aria-controls="why-content" aria-selected="false">Why</button>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="howto-content" role="tabpanel" aria-labelledby="howto-tab">
+                        <div class="tab-pane fade show active" id="howto-content" role="tabpanel"
+                            aria-labelledby="howto-tab">
                             <p class="card-text">
-                                <ol>
-                                    <li>Get one 8-sided die and two 16-sided dice, as shown in the image below.</li>
-                                    <li>Select the mnemonic length (12-24 words).</li>
-                                    <li>Choose the language for the mnemonic words.</li>
-                                    <li>Enter the dice rolls for each word.</li>
-                                    <li>Click "Add" to submit the word.</li>
-                                    <li>After entering the required number of words, select the final word from the generated list.</li>
-                                </ol>
-                                <span id="dices" style="display: block; width: 100%; height: 150px;"></span>
+                            <ol>
+                                <li>Get one 8-sided die and two 16-sided dice, as shown in the image below.</li>
+                                <li>Select the mnemonic length (12-24 words).</li>
+                                <li>Choose the language for the mnemonic words.</li>
+                                <li>Enter the dice rolls for each word.</li>
+                                <li>Click "Add" to submit the word.</li>
+                                <li>After entering the required number of words, select the final word from the
+                                    generated list.</li>
+                            </ol>
+                            <span id="dices" style="display: block; width: 100%; height: 150px;"></span>
                             </p>
                         </div>
                         <div class="tab-pane fade" id="why-content" role="tabpanel" aria-labelledby="why-tab">
                             <p class="card-text">
-                                Using dice to generate a cryptographic private key offers several advantages over software or hardware-based generators.
-                                <ul>
-                                    <li>
-                                        Software-based <a href="https://doi.org/10.6028/NIST.SP.800-90Ar1" target="_blank" rel="noopener">PRNGs</a> (Pseudo-Random Number Generators)
-                                        rely on algorithms and entropy sources within the operating system, which can be potentially compromised or insufficient.
-                                    </li>
-                                    <li>Hardware <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-digital-random-number-generator-drng-software-implementation-guide.html" target="_blank" rel="noopener">TRNGs</a> (True Random Number Generators), 
-                                        while based on real physical phenomena, are still electronic circuits. They require trust in the manufacturer and may be vulnerable to backdoors or malfunctions.
-                                    </li>
-                                </ul>
-                                With dice, entropy is physical, transparent, and manually verifiable. The generation process is entirely offline, making
-                                it immune to remote attacks and eliminating the need to trust third-party software or hardware.
-                                <br>
-                                8-sided and 16-sided dice are used instead of standard 6-sided dice to provide more entropy per roll, making mnemonic generation faster and secure.
+                                Using dice to generate a cryptographic private key offers several advantages over
+                                software or hardware-based generators.
+                            <ul>
+                                <li>
+                                    Software-based <a href="https://doi.org/10.6028/NIST.SP.800-90Ar1" target="_blank"
+                                        rel="noopener">PRNGs</a> (Pseudo-Random Number Generators)
+                                    rely on algorithms and entropy sources within the operating system, which can be
+                                    potentially compromised or insufficient.
+                                </li>
+                                <li>Hardware <a
+                                        href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-digital-random-number-generator-drng-software-implementation-guide.html"
+                                        target="_blank" rel="noopener">TRNGs</a> (True Random Number Generators),
+                                    while based on real physical phenomena, are still electronic circuits. They require
+                                    trust in the manufacturer and may be vulnerable to backdoors or malfunctions.
+                                </li>
+                            </ul>
+                            With dice, entropy is physical, transparent, and manually verifiable. The generation process
+                            is entirely offline, making
+                            it immune to remote attacks and eliminating the need to trust third-party software or
+                            hardware.
+                            <br>
+                            8-sided and 16-sided dice are used instead of standard 6-sided dice to provide more entropy
+                            per roll, making mnemonic generation faster and secure.
                             </p>
                         </div>
                     </div>
@@ -279,22 +316,24 @@
     </div>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="alert" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
-    
+
     <script>
         Element.prototype.on = Element.prototype.addEventListener;
         Element.prototype.off = Element.prototype.removeEventListener;
-        Element.prototype.trigger = function(eName) {
+        Element.prototype.trigger = function (eName) {
             this.dispatchEvent(new Event(eName, { bubbles: true, cancelable: true }));
         };
-        const create = function(tag, className = '', textContent = '') {
+        const create = function (tag, className = '', textContent = '') {
             const el = document.createElement(tag);
             if (className) el.className = className;
             if (textContent) el.textContent = textContent;
@@ -319,8 +358,8 @@
         const $submitWordAuto = $('submitWordAuto');
         const $entrySection = $('entrySection');
         const $resultsSection = $('resultsSection');
-        const $langlist = $('langlist');        
-        const $enteredWords = $('enteredWords');        
+        const $langlist = $('langlist');
+        const $enteredWords = $('enteredWords');
         const $finalWords = $('finalWords');
         const $resultWords = $('resultWords');
         const $resetBtn = $('resetBtn');
@@ -336,7 +375,7 @@
         //TODO use utils/fetchBip39Raw
 
         $langlist.querySelectorAll('input[name="wordlist"]').forEach(input => {
-            input.on('change', function() {
+            input.on('change', function () {
                 const lang = this.value;
                 if (WORDLISTS[lang]) {
                     WORDLIST = WORDLISTS[lang];
@@ -347,12 +386,12 @@
             });
         });
 
-        $alertDiv.querySelector('.btn-close').on('click', function() {
+        $alertDiv.querySelector('.btn-close').on('click', function () {
             $alertDiv.classList.remove('show');
             $alertDiv.style.display = 'none';
         });
 
-        $mnemonicLength.on('change', function() {
+        $mnemonicLength.on('change', function () {
             mnemonicLength = parseInt(this.value);
             reset();
         });
@@ -370,7 +409,7 @@
             updateDiceSelects();
             $diceInput.focus();
         }
-            
+
         function showAlert(message) {
             $alertDiv.querySelector('.toast-body').textContent = message;
             $alertDiv.classList.add('show');
@@ -394,7 +433,7 @@
             };
             return wordEl;
         }
-        
+
         function updateEnteredWords() {
             $enteredWords.parentElement.style.display = 'block';
             $enteredWords.innerHTML = '';
@@ -437,16 +476,16 @@
 
             try {
                 const word = decodeEntry($diceInput.value);
-                
+
                 enteredWordsArray.push(word);
 
                 await updateEnteredWords();
 
-                if(empty) {
+                if (empty) {
                     $diceInput.value = '';
                     updateDiceSelects();
                 }
-                
+
                 if (enteredWordsArray.length < mnemonicLength - 1) { //next word
                     $wordCounter.textContent = enteredWordsArray.length + 1;
                     //$diceInput.focus();
@@ -484,8 +523,8 @@
             //automatize all 1 word generation
             try {
                 $diceInput.value = await genRandomFace();
-                
-                handleSubmitWord(false);                
+
+                handleSubmitWord(false);
             } catch (err) {
                 showAlert(err.message);
                 $diceInput.value = '';
@@ -511,7 +550,7 @@
             $resultWords.trigger('click');
             navigator.clipboard.writeText($resultWords.value).catch(err => {
                 showAlert("Failed to copy mnemonic phrase to clipboard.");
-            }); 
+            });
             showAlert("Mnemonic phrase copied to clipboard.");
         });
 
@@ -529,4 +568,5 @@
 
     </script>
 </body>
-</html> 
+
+</html>
