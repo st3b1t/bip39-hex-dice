@@ -32,5 +32,5 @@ Run the `compile.py` script to merge resources from the `/src` folder and genera
 python3 compile.py
 ```
 
-This command creates the optimized version in `dist/`.  
-Make sure you have Python installed and `compile.py` available in your PATH.
+This command creates and replace the compiled version in `/index.html`.
+Make sure you have Python2/3 installed and `compile.py` available in your PATH.
