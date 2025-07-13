@@ -209,7 +209,7 @@
                 </fieldset>
                 <fieldset class="mb-4" style="display: none">
                     <legend>Result Mnemonic:</legend>
-                    <textarea id="resultWordsText" class="form-control mt-2" rows="3" readonly></textarea>
+                    <textarea id="resultWords" class="form-control mt-2" rows="3" readonly></textarea>
                     <button id="copyBtn" class="btn btn-primary mt-2">Copy</button>
                 </fieldset>
                 <button id="resetBtn" class="btn btn-secondary mt-2">Reset</button>
@@ -269,7 +269,7 @@
         const $langlist = $('langlist');        
         const $enteredWords = $('enteredWords');        
         const $finalWords = $('finalWords');
-        const $resultWords = $('resultWordsText');
+        const $resultWords = $('resultWords');
         const $resetBtn = $('resetBtn');
         const $copyBtn = $('copyBtn');
 
@@ -311,9 +311,7 @@
             $enteredWords.innerHTML = '';
             $finalWords.innerHTML = '';
             $diceInput.value = '';
-            $diceSelect.querySelectorAll('select').forEach(select => {
-                select.value = '';
-            });
+            $diceSelect.querySelectorAll('select').forEach(select => select.value = '');
             $diceInput.focus();
         }
             
@@ -385,9 +383,7 @@
 
                 if(empty) {
                     $diceInput.value = '';
-                    $diceSelect.querySelectorAll('select').forEach(select => {
-                        select.value = '';
-                    });
+                    $diceSelect.querySelectorAll('select').forEach(select => select.value = '');
                 }
                 
                 if (enteredWords.length < mnemonicLength - 1) { //next word
@@ -408,23 +404,21 @@
         $diceInput.on('keyup', (e) => {
             if (e.key === "Enter") {
                 handleSubmitWord();
-            }
-            else {
-                $diceSelect.querySelectorAll('select').forEach(select => {
-                    select.value = $diceInput.value.length > 0 ? $diceInput.value[select.dataset.index] : '';
-                    });
+            } else {
+                $diceSelect.querySelectorAll('select').forEach(select => select.value = $diceInput.value[select.dataset.index] || '');
             }
         });
 
-        $diceSelect.querySelectorAll('select').forEach(select => {
-            select.on('change', e => {
-                const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value).join('');
-                $diceInput.value = diceValues;
+        $diceSelect.querySelectorAll('select')
+            .forEach(select => {
+                select.on('change', e => {
+                    const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value);
+                    $diceInput.value = diceValues.join('');
+                });
             });
-        });
 
         $submitWordAuto.on('click', async (e) => {
-            //automatize 12 words generation for debug only simulate click on button
+            //automatize all 12 words generation for debug only simulate click on button
             //let maxInterval= 0;
             // const intervalId = setInterval(async () => {
             //     if (maxInterval++ >= mnemonicLength-1) {
@@ -432,11 +426,7 @@
             //         return;
             //     }
                 $diceInput.value = await getRandomFace();
-                $diceSelect.querySelectorAll('select').forEach(select => {
-                    
-                        select.value = $diceInput.value.length > 0 ? $diceInput.value[select.dataset.index] : ''; 
-
-                    });
+                $diceSelect.querySelectorAll('select').forEach(select => select.value = $diceInput.value[select.dataset.index] || '');
                 handleSubmitWord(false);
             //}, 300);
         });
