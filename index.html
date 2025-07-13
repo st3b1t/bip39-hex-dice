@@ -30,11 +30,16 @@
   padding: 5px;
   border-radius: 4px;
   display: inline-block;
+  font-size: 14px;
+  font-family: monospace;
   margin: 5px;
   padding: 5px 10px;
   border-radius: 5px;
   border: 1px solid #ced4da;
   cursor: default;
+}
+.word-item.btn {
+  cursor: pointer;
 }
 .final-words {
   margin-top: 1em;
@@ -55,13 +60,16 @@
     font-size: 16px;
     padding: 10px;
 }
-#diceInput {
+#diceInput,
+#diceSelect select {
   font-family: monospace;
+  font-size: 14px;
+  text-transform: uppercase;
 }
 #resultWords {
     width: 100%;
     height: 100px;
-    font-size: 20px;
+    font-size: 14px;
     font-family: monospace;
     resize: none;
     background-color: #eee;
@@ -4018,7 +4026,7 @@ async function genFinalWords(partialWords) {
                     </div>
                     <div class="col-auto">
                         <div id="diceSelect" class="input-group">
-                            <select data-index="0" class="form-select" aria-label="8-sided dice">
+                            <select data-index="0" class="form-select" aria-label="8-sided dice" title="first dice 8 faces">
                                 <option value="-"></option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -4029,7 +4037,7 @@ async function genFinalWords(partialWords) {
                                 <option value="7">7</option>
                                 <option value="8">8</option>
                             </select>
-                            <select data-index="1" class="form-select" aria-label="16-sided dice A">
+                            <select data-index="1" class="form-select" aria-label="16-sided dice A" title="second dice 16 faces">
                                 <option value="-"></option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -4048,7 +4056,7 @@ async function genFinalWords(partialWords) {
                                 <option value="e">E</option>
                                 <option value="f">F</option>
                             </select>
-                            <select data-index="2" class="form-select" aria-label="16-sided dice B">
+                            <select data-index="2" class="form-select" aria-label="16-sided dice B" title="third dice 16 faces">
                                 <option value="-"></option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
