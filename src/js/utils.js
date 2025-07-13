@@ -3,7 +3,7 @@ function hasStrongCrypto() {
     if ('crypto' in window && window['crypto'] !== null) {
         return true;
     } else {
-        throw new Error('Mnemonic should be generated with strong randomness, but crypto.getRandomValues is unavailable');
+        throw new Error('Mnemonic should be generated with strong randomness, but crypto.getRandomValues() is unavailable');
     }
 }
 
@@ -15,30 +15,39 @@ async function fetchBip39Raw (lang) {
 
 async function getRandomFace() {
     const randomBytes = new Uint8Array(3);
+    hasStrongCrypto();
     await crypto.getRandomValues(randomBytes);
-    return  (randomBytes[0] % 8 + 1).toString() + 
-            (randomBytes[1] % 16).toString(16) + 
-            (randomBytes[2] % 16).toString(16);
+    return  (randomBytes[0] % 8 + 1).toString() + //range 1-8
+            (randomBytes[1] % 16).toString(16) +  //range 0-15, hex
+            (randomBytes[2] % 16).toString(16);   //range 0-15, hex
 }
 
-function decodeEntry(entry) {
-    if (entry.length !== 3) {
+function decodeEntry(inputValue) {
+    const entry = inputValue.trim().toUpperCase();
+
+    if (!entry || entry.length !== 3) {
         throw new Error("Enter 3 characters for the dice roll, e.g., '28E'");
     }
-    const group = parseInt(entry[0], 10) - 1;
-    if (isNaN(group) || group < 0 || group > 7) {
+    if (!/^[1-8]$/.test(entry[0])) {
         throw new Error("The first character must be a number from 1 to 8.");
     }
-    const row = parseInt(entry[1], 16);
-    const col = parseInt(entry[2], 16);
-    if (isNaN(row) || isNaN(col)) {
-            throw new Error("The second and third characters must be hex (0-9, A-F).");
+    const first = parseInt(entry[0], 10) - 1;
+    
+    if (!/^[0-9A-F]$/.test(entry[1])) {
+        throw new Error("The second character must be hex (0-9, A-F).");
     }
-    const index = group * 256 + row * 16 + col;
-    if (index >= WORDLIST.length) {
-        throw new Error("Error, word index is out of bounds.");
+    const second = parseInt(entry[1], 16);
+
+    if (!/^[0-9A-F]$/.test(entry[2])) {
+        throw new Error("The third character must be hex (0-9, A-F).");
     }
-    return { word: WORDLIST[index], index };
+    const third = parseInt(entry[2], 16);
+    
+    const listIndex = first * 256 + second * 16 + third;
+    if (listIndex >= WORDLIST.length) {
+        throw new Error(`Error value ${inputValue}, word index is out of bounds.`);
+    }
+    return { word: WORDLIST[listIndex], index: listIndex };
 }
 
 async function validChecksum(words) {

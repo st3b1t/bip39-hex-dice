@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hex Dice 🎲 Bip39 Mnemonic Generator</title>
 <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="dices.css" rel="stylesheet" type="text/css">
-<link href="main.css" rel="stylesheet" type="text/css">
+<link href="css/dices.css" rel="stylesheet" type="text/css">
+<link href="css/main.css" rel="stylesheet" type="text/css">
 <script src="wordlists/chinese_simplified.js"></script>
 <script src="wordlists/chinese_traditional.js"></script>
 <script src="wordlists/czech.js"></script>
@@ -17,7 +17,7 @@
 <script src="wordlists/korean.js"></script>
 <script src="wordlists/portuguese.js"></script>
 <script src="wordlists/spanish.js"></script>
-<script src="utils.js"></script>
+<script src="js/utils.js"></script>
 </head>
 <body>
     <h1>Hex Dice 🎲 Bip39 Mnemonic Generator</h1>
@@ -250,12 +250,11 @@
         const $ = document.getElementById.bind(document);
         // Element.prototype.find = function(selector) {
         //     return {
-        //         each: (callback) => {
-        //             this.querySelectorAll(selector).forEach(callback);
-        //         }
+        //         each: callback => this.querySelectorAll(selector).forEach(callback)
         //     };
         // };
-        // minimal polyfill         
+        //
+        // Minimal polyfill
 
         const $alertDiv = $('alert');
         const $mnemonicLength = $('mnemonicLength');
@@ -353,14 +352,24 @@
             });
         }
 
+        function updateDiceSelects() {
+            $diceSelect.querySelectorAll('select').forEach((select, index) => {
+                select.value = $diceInput.value[index] || '';
+            });
+        }
+
+        // function updateDiceInput() {
+        //     const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value);
+        //     $diceInput.value = diceValues.join('');
+
         async function handleFinalWordSelection(onClick) {
             $finalWords.parentElement.style.display = 'block';
             $finalWords.textContent = `Calculating possible final words for a ${mnemonicLength}-word seed...`;
 
-            const valid_last = await genFinalWords(enteredWords);
+            const validLast = await genFinalWords(enteredWords);
 
-            $finalWords.innerHTML = `Choose one of these <b>${valid_last.length} words</b> as the final mnemonic word:<br />`;
-            valid_last.forEach((word) => {
+            $finalWords.innerHTML = `Choose one of these <b>${validLast.length} words</b> as the final mnemonic word:<br />`;
+            validLast.forEach((word) => {
                 const wordEl = createWord(word, async (word) => { //on click final word
                     enteredWords.push(word);
                     updateEnteredWords();
@@ -374,18 +383,16 @@
         }
 
         async function handleSubmitWord(empty = true) {
-            const entry = $diceInput.value.trim().toUpperCase();
-            if (!entry) return;
 
             try {
-                const { word, index } = decodeEntry(entry);
+                const { word, index } = decodeEntry($diceInput.value);
                 enteredWords.push(word);
 
                 await updateEnteredWords();
 
                 if(empty) {
                     $diceInput.value = '';
-                    $diceSelect.querySelectorAll('select').forEach(select => select.value = '');
+                    updateDiceSelects();
                 }
                 
                 if (enteredWords.length < mnemonicLength - 1) { //next word
@@ -396,8 +403,8 @@
                     await handleFinalWordSelection();
                 }
 
-            } catch (e) {
-                showAlert(e.message);
+            } catch (err) {
+                showAlert(err.message);
                 $diceInput.select();
             }
         }
@@ -407,7 +414,7 @@
             if (e.key === "Enter") {
                 handleSubmitWord();
             } else {
-                $diceSelect.querySelectorAll('select').forEach(select => select.value = $diceInput.value[select.dataset.index] || '');
+                updateDiceSelects();
             }
         });
 
@@ -420,18 +427,28 @@
             });
 
         $submitWordAuto.on('click', async (e) => {
-            //automatize all 12 words generation for debug only simulate click on button
-            //let maxInterval= 0;
-            // const intervalId = setInterval(async () => {
-            //     if (maxInterval++ >= mnemonicLength-1) {
-            //         clearInterval(intervalId);
-            //         return;
-            //     }
+            e.preventDefault
+            //automatize all 1 word generation
+            try {
                 $diceInput.value = await getRandomFace();
-                $diceSelect.querySelectorAll('select').forEach(select => select.value = $diceInput.value[select.dataset.index] || '');
-                handleSubmitWord(false);
-            //}, 300);
+                
+                handleSubmitWord(false);                
+            } catch (err) {
+                showAlert(err.message);
+                $diceInput.value = '';
+            }
+            updateDiceSelects();
         });
+
+        // loop all words
+        // let maxInterval= 0;
+        // const intervalId = setInterval(async () => {
+        //     if (maxInterval++ >= mnemonicLength-1) {
+        //         clearInterval(intervalId);
+        //         return;
+        //     }
+        //     $submitWordAuto.trigger('click');
+        // }, 300);
 
         $resultWords.on('click', () => {
             $resultWords.select();
@@ -440,7 +457,6 @@
         $copyBtn.on('click', () => {
             $resultWords.trigger('click');
             navigator.clipboard.writeText($resultWords.value).catch(err => {
-                console.error('Failed to copy: ', err);
                 showAlert("Failed to copy mnemonic phrase to clipboard.");
             }); 
             showAlert("Mnemonic phrase copied to clipboard.");

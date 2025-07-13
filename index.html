@@ -37,6 +37,7 @@
   padding: 5px 10px;
   border-radius: 5px;
   border: 1px solid #ced4da;
+  cursor: default;
 }
 .final-words {
   margin-top: 1em;
@@ -3793,32 +3794,55 @@ WORDLISTS["spanish"] = [
 "zafiro", "zanja", "zapato", "zarza", "zona", "zorro", "zumo", "zurdo"]
 </script>
 <script>
-async function getRandomFace() {
-    const randomBytes = new Uint8Array(3);
-    await crypto.getRandomValues(randomBytes);
-    return  (randomBytes[0] % 8 + 1).toString() + 
-            (randomBytes[1] % 16).toString(16) + 
-            (randomBytes[2] % 16).toString(16);
+function hasStrongCrypto() {
+    if ('crypto' in window && window['crypto'] !== null) {
+        return true;
+    } else {
+        throw new Error('Mnemonic should be generated with strong randomness, but crypto.getRandomValues() is unavailable');
+    }
 }
 
-function decodeEntry(entry) {
-    if (entry.length !== 3) {
+async function fetchBip39Raw (lang) {
+  return await fetch(`https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/${lang}.txt`)
+    .then(resp => resp.text())
+    .then(text => text.split('\n').filter(line => line.trim() !== ''));
+}
+
+async function getRandomFace() {
+    const randomBytes = new Uint8Array(3);
+    hasStrongCrypto();
+    await crypto.getRandomValues(randomBytes);
+    return  (randomBytes[0] % 8 + 1).toString() + //range 1-8
+            (randomBytes[1] % 16).toString(16) +  //range 0-15, hex
+            (randomBytes[2] % 16).toString(16);   //range 0-15, hex
+}
+
+function decodeEntry(inputValue) {
+    const entry = inputValue.trim().toUpperCase();
+
+    if (!entry || entry.length !== 3) {
         throw new Error("Enter 3 characters for the dice roll, e.g., '28E'");
     }
-    const group = parseInt(entry[0], 10) - 1;
-    if (isNaN(group) || group < 0 || group > 7) {
+    if (!/^[1-8]$/.test(entry[0])) {
         throw new Error("The first character must be a number from 1 to 8.");
     }
-    const row = parseInt(entry[1], 16);
-    const col = parseInt(entry[2], 16);
-    if (isNaN(row) || isNaN(col)) {
-            throw new Error("The second and third characters must be hex (0-9, A-F).");
+    const first = parseInt(entry[0], 10) - 1;
+    
+    if (!/^[0-9A-F]$/.test(entry[1])) {
+        throw new Error("The second character must be hex (0-9, A-F).");
     }
-    const index = group * 256 + row * 16 + col;
-    if (index >= WORDLIST.length) {
-        throw new Error("Error, word index is out of bounds.");
+    const second = parseInt(entry[1], 16);
+
+    if (!/^[0-9A-F]$/.test(entry[2])) {
+        throw new Error("The third character must be hex (0-9, A-F).");
     }
-    return { word: WORDLIST[index], index };
+    const third = parseInt(entry[2], 16);
+    
+    const listIndex = first * 256 + second * 16 + third;
+    if (listIndex >= WORDLIST.length) {
+        throw new Error(`Error value ${inputValue}, word index is out of bounds.`);
+    }
+    return { word: WORDLIST[listIndex], index: listIndex };
 }
 
 async function validChecksum(words) {
@@ -4091,12 +4115,11 @@ async function genFinalWords(partialWords) {
         const $ = document.getElementById.bind(document);
         // Element.prototype.find = function(selector) {
         //     return {
-        //         each: (callback) => {
-        //             this.querySelectorAll(selector).forEach(callback);
-        //         }
+        //         each: callback => this.querySelectorAll(selector).forEach(callback)
         //     };
         // };
-        // minimal polyfill         
+        //
+        // Minimal polyfill
 
         const $alertDiv = $('alert');
         const $mnemonicLength = $('mnemonicLength');
@@ -4119,6 +4142,8 @@ async function genFinalWords(partialWords) {
 
         const defaultLang = $langlist.querySelector('input[name="wordlist"]:checked').value;
         let WORDLIST = WORDLISTS[defaultLang || 'english'];
+
+        //TODO use utils/fetchBip39Raw
 
         $langlist.querySelectorAll('input[name="wordlist"]').forEach(input => {
             input.on('change', function() {
@@ -4192,14 +4217,24 @@ async function genFinalWords(partialWords) {
             });
         }
 
+        function updateDiceSelects() {
+            $diceSelect.querySelectorAll('select').forEach((select, index) => {
+                select.value = $diceInput.value[index] || '';
+            });
+        }
+
+        // function updateDiceInput() {
+        //     const diceValues = Array.from($diceSelect.querySelectorAll('select')).map(select => select.value);
+        //     $diceInput.value = diceValues.join('');
+
         async function handleFinalWordSelection(onClick) {
             $finalWords.parentElement.style.display = 'block';
             $finalWords.textContent = `Calculating possible final words for a ${mnemonicLength}-word seed...`;
 
-            const valid_last = await genFinalWords(enteredWords);
+            const validLast = await genFinalWords(enteredWords);
 
-            $finalWords.innerHTML = `Choose one of these <b>${valid_last.length} words</b> as the final mnemonic word:<br />`;
-            valid_last.forEach((word) => {
+            $finalWords.innerHTML = `Choose one of these <b>${validLast.length} words</b> as the final mnemonic word:<br />`;
+            validLast.forEach((word) => {
                 const wordEl = createWord(word, async (word) => { //on click final word
                     enteredWords.push(word);
                     updateEnteredWords();
@@ -4213,18 +4248,16 @@ async function genFinalWords(partialWords) {
         }
 
         async function handleSubmitWord(empty = true) {
-            const entry = $diceInput.value.trim().toUpperCase();
-            if (!entry) return;
 
             try {
-                const { word, index } = decodeEntry(entry);
+                const { word, index } = decodeEntry($diceInput.value);
                 enteredWords.push(word);
 
                 await updateEnteredWords();
 
                 if(empty) {
                     $diceInput.value = '';
-                    $diceSelect.querySelectorAll('select').forEach(select => select.value = '');
+                    updateDiceSelects();
                 }
                 
                 if (enteredWords.length < mnemonicLength - 1) { //next word
@@ -4235,8 +4268,8 @@ async function genFinalWords(partialWords) {
                     await handleFinalWordSelection();
                 }
 
-            } catch (e) {
-                showAlert(e.message);
+            } catch (err) {
+                showAlert(err.message);
                 $diceInput.select();
             }
         }
@@ -4246,7 +4279,7 @@ async function genFinalWords(partialWords) {
             if (e.key === "Enter") {
                 handleSubmitWord();
             } else {
-                $diceSelect.querySelectorAll('select').forEach(select => select.value = $diceInput.value[select.dataset.index] || '');
+                updateDiceSelects();
             }
         });
 
@@ -4259,18 +4292,28 @@ async function genFinalWords(partialWords) {
             });
 
         $submitWordAuto.on('click', async (e) => {
-            //automatize all 12 words generation for debug only simulate click on button
-            //let maxInterval= 0;
-            // const intervalId = setInterval(async () => {
-            //     if (maxInterval++ >= mnemonicLength-1) {
-            //         clearInterval(intervalId);
-            //         return;
-            //     }
+            e.preventDefault
+            //automatize all 1 word generation
+            try {
                 $diceInput.value = await getRandomFace();
-                $diceSelect.querySelectorAll('select').forEach(select => select.value = $diceInput.value[select.dataset.index] || '');
-                handleSubmitWord(false);
-            //}, 300);
+                
+                handleSubmitWord(false);                
+            } catch (err) {
+                showAlert(err.message);
+                $diceInput.value = '';
+            }
+            updateDiceSelects();
         });
+
+        // loop all words
+        // let maxInterval= 0;
+        // const intervalId = setInterval(async () => {
+        //     if (maxInterval++ >= mnemonicLength-1) {
+        //         clearInterval(intervalId);
+        //         return;
+        //     }
+        //     $submitWordAuto.trigger('click');
+        // }, 300);
 
         $resultWords.on('click', () => {
             $resultWords.select();
@@ -4279,7 +4322,6 @@ async function genFinalWords(partialWords) {
         $copyBtn.on('click', () => {
             $resultWords.trigger('click');
             navigator.clipboard.writeText($resultWords.value).catch(err => {
-                console.error('Failed to copy: ', err);
                 showAlert("Failed to copy mnemonic phrase to clipboard.");
             }); 
             showAlert("Mnemonic phrase copied to clipboard.");
