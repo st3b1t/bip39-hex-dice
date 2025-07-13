@@ -16,7 +16,8 @@ You will need one 8-sided die and two 16-sided dice, as shown below.
 
 ## Development
 
-After making changes to the source files, compile the project to generate a new standalone page for offline use.
+You can work in development mode without compilation by simply opening the file `/src/index.html` directly in your browser.
+This allows for quick testing and iterations. After the changes compile the project to generate a new standalone page `/index.html` for offline use.
 
 Run the `compile.py` script to merge resources from the `/src` folder and generate a new `/index.html` file:
 
