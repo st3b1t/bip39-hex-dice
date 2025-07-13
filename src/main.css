@@ -47,3 +47,9 @@ body {
     background-color: #eee;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
 }
+#submitWordWrapper .text-danger {
+  visibility: hidden;
+}
+#submitWordWrapper:hover .text-danger {
+  visibility: visible
+}
