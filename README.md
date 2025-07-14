@@ -10,15 +10,17 @@ Only the CSS styles from Bootstrap are included to enhance the user interface, k
 
 This design choice was made to maximize security and minimize potential bugs or vulnerabilities that can arise from third-party libraries, making the tool more trustworthy for sensitive use cases such as generating cryptographic mnemonics.
 
-*It is always encouraged to use dice as the source of entropy. 
-The `Simulate Roll` function, while providing a security level comparable to iancoleman tool, 
-is only to facilitate development mode and exceeds the primary scope of this project.*
+## Security Recommendations
 
-## Download and use offline
-
-Online demo is here:
+You can try the tool using the online demo:
 https://st3b1t.github.io/bip39-hex-dice/index.html
-You can use this page entirely offline by simply saving it locally from your browser, the saved .html file will remain fully functional, similar to how iancoleman.io/bip39 can be used offline.
+
+**For maximum security and privacy, it is strongly recommended to use this page offline.**
+
+Simply save the page locally from your browser saved .html file will remain fully functional, similar to how https://iancoleman.io/bip39 can be used on air-gapped hardware.
+
+*It is always encouraged to use dice as the source of entropy. 
+The `Simulate Roll` function is only to facilitate development mode and exceeds the primary scope of this project.*
 
 ## Requirements
 
@@ -39,3 +41,9 @@ python3 compile.py
 
 This command creates and replace the compiled version in `/index.html`.
 Make sure you have Python2/3 installed and `compile.py` available in your PATH.
+
+# Contribute
+
+This project is open source and welcomes community contributions.
+You can submit pull requests for new features or bug fixes, and report issues to help improve the tool.
+All contributions are appreciated and reviewed with care.
