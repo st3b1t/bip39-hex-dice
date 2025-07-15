@@ -1,4 +1,4 @@
-//TODO include utils.js
+
 //...work in progress...
 
 import { decodeEntry, getRandomFace, validChecksum, genFinalWords } from '../src/utils.js';
